@@ -1,24 +1,26 @@
-import logo from './logo.svg';
 import './App.css';
+import { Route, Routes } from 'react-router-dom';
+import HomePage from './components/pages/HomePage';
+import AboutUs from './components/pages/AboutUs';
+import RabbiBooks from './components/pages/RabbiBooks';
+import Lessons from './components/pages/Lessons';
+import Flyers from './components/pages/Flyers';
+import TwoHalachaPerDay from './components/pages/TwoHalachaPerDay';
+import HalachaTests from './components/pages/HalachaTests';
+import LifeStory from './components/pages/LifeStory';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <Routes>
+        <Route path="/" element={<HomePage/>}> </Route>
+        <Route path="/about-us" element={<AboutUs/>}> </Route>
+        <Route path="/rabbi-books" element={<RabbiBooks/>}> </Route>
+        <Route path="/lessons" element={<Lessons/>}> </Route>
+        <Route path="/flyers" element={<Flyers/>}> </Route>
+        <Route path="/two-halacha-per-day" element={<TwoHalachaPerDay/>}> </Route>
+        <Route path="/HalachaTests" element={<HalachaTests/>}> </Route>
+        <Route path="/LifeStory" element={<LifeStory/>}> </Route>
+      </Routes>
   );
 }
 
