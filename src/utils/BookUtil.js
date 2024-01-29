@@ -2,7 +2,7 @@ import api from '../api';
 
 const getAllBooks = async () => {
   try {
-    const response = await api.get('Book');
+    const response = await api.get('books');
     return response.data;
   } catch (error) {
     console.error('Error in getBooks:', error);
@@ -12,17 +12,18 @@ const getAllBooks = async () => {
 
 const getBookById = async (id) => {
   try {
-    const response = await api.get(`Book/BookById?id=${id}`);
+    const response = await api.get(`books/${id}`);
     return response.data;
   } catch (error) {
     console.error('Error in getBookById:', error);
-    return null;
+    console.error('Error details:', error.response);
+    throw error; // Rethrow the error
   }
 };
 
 const addBook = async (book) => {
   try {
-    const response = await api.post('Book/InsertBook', book);
+    const response = await api.post('books/InsertBook', book);
     return response.data;
   } catch (error) {
     console.error('Error in addBook:', error);
@@ -32,7 +33,7 @@ const addBook = async (book) => {
 
 const updateBook = async (book) => {
   try {
-    const response = await api.put('Book/UpdateBook', book);
+    const response = await api.put('books/UpdateBook', book);
     return response.data;
   } catch (error) {
     console.error('Error in updateBook:', error);
@@ -42,11 +43,11 @@ const updateBook = async (book) => {
 
 const deleteBook = async (id) => {
   try {
-    const response = await api.delete(`Book/DeleteBook?id=${id}`);
+    const response = await api.get(`books/${id}`);
     return response.data;
   } catch (error) {
     console.error('Error in deleteBook:', error);
-    return null;
+    throw error; // Rethrow the error
   }
 };
 

@@ -6,20 +6,21 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from 'react-redux'
+import bookSlice from './features/bookSlice';
 
-// const store = configureStore({
-//   reducer:{
-
-//   }
-// })
+const store = configureStore({
+  reducer:{
+      book:bookSlice,
+  }
+})
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    {/* <Provider store={store}> */}
+    <Provider store={store}>
     <BrowserRouter>
     <App />
     </BrowserRouter>
-    {/* </Provider> */}
+    </Provider>
   </React.StrictMode>
 );
 

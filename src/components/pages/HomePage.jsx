@@ -1,10 +1,31 @@
+import { CardMedia ,Box, Container, Stack, Grid} from "@mui/material";
 import React from "react";
-import Nav from "../Nav";
+import image1 from "../../pictures/image1.jpg";
+
 const HomePage = ()=>{
+  const style={bgcolor:"blue", height:"150px" ,width:"120px" ,borderRadius:"25px"
+
+  }
     //js כאן המקום לכתוב קוד 
-    return (<>
-  <Nav/>
-  {/* <h2>hello</h2> */}
-    </>)
+    return (
+        <Box
+        display={"flex"}
+        flexWrap={"wrap"}
+        justifyContent={"space-around"}
+        alignContent={"space-around"}
+        padding="5px"
+        margin={"5px"}
+        bgcolor={"divider"}
+        >
+          <Box sx={style}>
+          </Box>
+          <Box sx={style}>
+          </Box>   
+          <Box sx={style}>
+          </Box>
+          <Box sx={style}>
+          </Box>
+      </Box >
+     )
 }
 export default HomePage 
