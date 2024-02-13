@@ -11,7 +11,7 @@ import LifeStory from './components/pages/LifeStory';
 import DrawerAppBar from './components/DrawerAppBar';
 import SignUp from './components/SignUp';
 import SignIn from './components/pages/SignIn';
-
+import {yehuda} from '../public/fonts/yehuda-1/yehuda';
 
 function App() {
   return (

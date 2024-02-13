@@ -3,8 +3,8 @@ const  initiavalue = {
     Books: []
 }
 
-const userSlice = createSlice({
-    name:"books",
+const bookSlice = createSlice({
+    name:"book",
     initialState: initiavalue,
     reducers:{
         setBooks: (state , actions)=>{
@@ -12,8 +12,6 @@ const userSlice = createSlice({
             state.Books = actions.payload;
         }
     }
-
-
 })
-export const {setBooks}=userSlice.actions;
-export default userSlice.reducer;
+export const {setBooks}=bookSlice.actions;
+export default bookSlice.reducer;

@@ -1,63 +1,37 @@
 import * as React from "react";
-import { styled, alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
+import { FormControl } from "@mui/material";
 
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginLeft: 0,
-  width: "100%",
-  [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(1),
-    width: "auto",
-  },
-}));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  width: "100%",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    [theme.breakpoints.up("sm")]: {
-      width: "12ch",
-      "&:focus": {
-        width: "20ch",
-      },
-    },
-  },
-}));
-
-export default function SearchInput() {
+export default function SearchInput({ handleChange }) {
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <Search>
-        <SearchIconWrapper>
-          <SearchIcon />
-        </SearchIconWrapper>
-        <StyledInputBase
-          placeholder="Search…"
+    <FormControl
+    display={"flex"}
+      sx={{
+        width: 300,
+        display: "flex",
+        alignSelf: "center",
+        height: "60px",
+        flexGrow: 1,
+        border: "2px solid black",
+        borderRadius: "4px",
+      }}
+    >
+      <Box display={"flex"} flexDirection={"row"} alignItems={"center"}sx={{ alignSelf: "center" }}>
+        <InputBase
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            color: "inherit",
+            width: "100%",
+          }}
+          value="חיפוש..."
           inputProps={{ "aria-label": "search" }}
+          onChange={(e) => handleChange(e.target.value)}
         />
-      </Search>
-    </Box>
+        <SearchIcon />
+      </Box>
+    </FormControl>
   );
 }

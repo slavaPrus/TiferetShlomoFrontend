@@ -1,7 +1,9 @@
 .App {
   text-align: center;
 }
-
+.myText {
+  font-family: 'yehuda', sans-serif;
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -36,3 +38,9 @@
     transform: rotate(360deg);
   }
 }
+
+@font-face {
+  font-family: 'yehuda';
+  src:"../public/fonts/yehuda/yehudaclm-bold-webfont.ttf";
+}
+

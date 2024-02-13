@@ -1,5 +1,23 @@
 import api from '../api';
 
+const getBooksByPage = async (page) => {
+  try {
+    const response = await api.get(`/books/getBooksByPage/${page}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error in getBooksByPage:', error);
+    return null;
+  }
+};
+const getSearchBooksByPage = async (str,page) => {
+  try {
+    const response = await api.get(`/books/getSearchBooksByPage?str=${str}&page=${page}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error in getBooksByPage:', error);
+    return null;
+  }
+};
 const getAllBooks = async () => {
   try {
     const response = await api.get('books');
@@ -9,7 +27,6 @@ const getAllBooks = async () => {
     return null;
   }
 };
-
 const getBookById = async (id) => {
   try {
     const response = await api.get(`books/${id}`);
@@ -51,4 +68,4 @@ const deleteBook = async (id) => {
   }
 };
 
-export { getAllBooks, getBookById, addBook, updateBook, deleteBook };
+export { getAllBooks,getBooksByPage,getSearchBooksByPage, getBookById, addBook, updateBook, deleteBook };
