@@ -9,9 +9,9 @@ import TwoHalachaPerDay from './components/pages/TwoHalachaPerDay';
 import HalachaTests from './components/pages/HalachaTests';
 import LifeStory from './components/pages/LifeStory';
 import DrawerAppBar from './components/DrawerAppBar';
-import SignUp from './components/SignUp';
+import SignUp from './components/pages/SignUp';
 import SignIn from './components/pages/SignIn';
-import {yehuda} from '../public/fonts/yehuda-1/yehuda';
+import OneBook from './components/OneBook';
 
 function App() {
   return (
@@ -20,6 +20,8 @@ function App() {
           <Route path="/" element={<HomePage/>}> </Route>
           <Route path="/about-us" element={<AboutUs/>}> </Route>
           <Route path="/rabbi-books" element={<RabbiBooks/>}> </Route>
+          <Route path="/one-book" element={<OneBook/>}></Route>       
+        
           <Route path="/lessons" element={<Lessons/>}> </Route>
           <Route path="/flyers" element={<Flyers/>}> </Route>
           <Route path="/two-halacha-per-day" element={<TwoHalachaPerDay/>}> </Route>

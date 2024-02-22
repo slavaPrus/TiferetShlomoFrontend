@@ -32,7 +32,7 @@ function getStyles(name, categoryName, theme) {
   };
 }
 
-export default function FilterInput() {
+export default function FilterInput({handleChange}) {
   const dispatch = useDispatch();
 
   // useEffect(() => {
@@ -54,7 +54,7 @@ export default function FilterInput() {
   const theme = useTheme();
   const [categoryName, setCategoryName] = useState([]);
 
-  const handleChange = (event) => {
+  const handleFilterChange = (event) => {
     const {
       target: { value },
     } = event;
@@ -62,6 +62,8 @@ export default function FilterInput() {
       // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value
     );
+  
+    handleChange(value);
   };
 
   return (
@@ -82,7 +84,7 @@ export default function FilterInput() {
           id="demo-multiple-chip"
           value={categoryName}
           variant="filled"
-          onChange={handleChange}
+          onChange={handleFilterChange}
           sx={{ border: "2px black solid" }}
           input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
           renderValue={(selected) => (

@@ -26,7 +26,7 @@ export default function SearchInput({ handleChange }) {
             color: "inherit",
             width: "100%",
           }}
-          value="חיפוש..."
+          placeholder="חיפוש..."
           inputProps={{ "aria-label": "search" }}
           onChange={(e) => handleChange(e.target.value)}
         />
