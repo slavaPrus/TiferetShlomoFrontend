@@ -12,7 +12,7 @@ const getAllMarks = async () => {
 
 const getMarkById = async (id) => {
   try {
-    const response = await api.get(`Mark/MarkById?id=${id}`);
+    const response = await api.get(`mark/${id}`);
     return response.data;
   } catch (error) {
     console.error('Error in getMarkById:', error);

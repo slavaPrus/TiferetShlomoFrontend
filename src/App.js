@@ -12,6 +12,7 @@ import DrawerAppBar from './components/DrawerAppBar';
 import SignUp from './components/pages/SignUp';
 import SignIn from './components/pages/SignIn';
 import OneBook from './components/OneBook';
+import PrivateArea from './components/pages/PrivateArea';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/two-halacha-per-day" element={<TwoHalachaPerDay/>}> </Route>
           <Route path="/HalachaTests" element={<HalachaTests/>}> </Route>
           <Route path="/LifeStory" element={<LifeStory/>}> </Route>
+          <Route path="/privateArea" element={<PrivateArea/>}></Route>
         </Route>
         <Route path="/signUp" element={<SignUp/>}></Route>
         <Route path="/signIn" element={<SignIn/>}></Route>

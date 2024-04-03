@@ -22,17 +22,17 @@ const MenuProps = {
   },
 };
 
-const categoriesName = ["הלכה", " מוסר", "אמונה וביטחון"];
+const categoriesName = ["הצג הכל","הלכה", "מוסר", "אמונה וביטחון"];
 function getStyles(name, categoryName, theme) {
   return {
     fontWeight:
-      categoryName.indexOf(name) === -1
+      categoryName === name
         ? theme.typography.fontWeightRegular
         : theme.typography.fontWeightMedium,
   };
 }
 
-export default function FilterInput({handleChange}) {
+export default function FilterInput({ handleChange }) {
   const dispatch = useDispatch();
 
   // useEffect(() => {
@@ -52,18 +52,20 @@ export default function FilterInput({handleChange}) {
   // fetchData();
   // }, []);
   const theme = useTheme();
-  const [categoryName, setCategoryName] = useState([]);
+  const [categoryName, setCategoryName] = useState("");
+  // const[currentCategory,setCurrentCategory]= useState(false);
 
   const handleFilterChange = (event) => {
     const {
       target: { value },
     } = event;
-    setCategoryName(
+    const currentValue = categoryName === value ? "" : value;
+    setCategoryName(currentValue);
       // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
-  
-    handleChange(value);
+      // typeof value === "string" ? value.split(",") : value
+
+    // handleChange(value.length > 0 ? value : null);
+    handleChange(currentValue);
   };
 
   return (
@@ -82,20 +84,17 @@ export default function FilterInput({handleChange}) {
         <Select
           labelId="demo-multiple-chip-label"
           id="demo-multiple-chip"
-          value={categoryName}
+          // value={categoryName}
           variant="filled"
           onChange={handleFilterChange}
           sx={{ border: "2px black solid" }}
           input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-          renderValue={(selected) => (
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-              {selected.map((value) => (
-                <Chip key={value} label={value} />
-              ))}
-            </Box>
-          )}
+          // renderValue={categoryName !== "" ?(selected) => (
+          //   <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+          //       <Chip key={selected} label={selected} />
+          //   </Box>
+          // ): null}
           MenuProps={MenuProps}
-          multiple
         >
           {categoriesName.map((name) => (
             <MenuItem

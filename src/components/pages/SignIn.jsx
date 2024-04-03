@@ -1,30 +1,35 @@
-import React ,{useEffect} from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Signin } from '../../utils/UserUtil';
-import { getAllBooks, getBookById } from '../../utils/BookUtil';
-
+import React, { useEffect } from "react";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { Signin } from "../../utils/UserUtil";
+import { useDispatch } from "react-redux";
+import { setOneUser } from "../../features/userSlice";
+import { useNavigate } from "react-router-dom";
 
 function Copyright(props) {
   return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
+    <Typography
+      variant="body2"
+      color="text.secondary"
+      align="center"
+      {...props}
+    >
+      {"Copyright © "}
       <Link color="inherit" href="https://mui.com/">
         Your Website
-      </Link>{' '}
+      </Link>
       {new Date().getFullYear()}
-      {'.'}
     </Typography>
   );
 }
@@ -34,38 +39,27 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignIn() {
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Call your asynchronous function here, for example getAllBooks
-        await getBookById(2);
-        // Other logic after the async function completes
-      } catch (error) {
-        // Handle errors if necessary
-        console.error('Error fetching data:', error);
-      }
-    };
-  
-    // Call the async function immediately
-    fetchData();
-  }, []);
-  
-
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const email = data.get('email');
-    const password = data.get('password');
+    const email = data.get("email");
+    const password = data.get("password");
 
     if (email && password) {
       try {
         const response = await Signin({ email, password });
-        console.log('Signin response:', response);
-
-        // Handle the response as needed, e.g., redirect to another page
+        dispatch(setOneUser(response));
+        alert("התחברת בהצלחה");
+        navigate("../privateArea");
       } catch (error) {
-        console.error('Error in Signin:', error);
+        console.error("Error in Signin:", error);
+        alert(
+          error.status === 204
+            ? "לא נמצא משתמש עם הפרטים שהזנת"
+            : "אנא בדוק את שם המשתמש והסיסמא ארעה שגיאה בהתחברות"
+        );
       }
     }
   };
@@ -76,18 +70,23 @@ export default function SignIn() {
         <Box
           sx={{
             marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{ mt: 1 }}
+          >
             <TextField
               margin="normal"
               required

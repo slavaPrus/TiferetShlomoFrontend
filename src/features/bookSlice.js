@@ -1,15 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
-const  initiavalue = {
+const  initialValue = {
     Books: []
 }
 
 const bookSlice = createSlice({
     name:"book",
-    initialState: initiavalue,
+    initialState: initialValue,
     reducers:{
-        setBooks: (state , actions)=>{
+        setBooks: (state , action)=>{
             
-            state.Books = actions.payload;
+            state.Books = action.payload;
         }
     }
 })

@@ -18,16 +18,28 @@ export default function RabbiBooks() {
   const [prevStr, setPrevStr] = useState("");
   const [isFilter, setIsFilter] = useState(false);
   const [isSearch, setIsSearch] = useState(false);
+  const [filterCategory, setFilterCategory] = useState([]);
+  const [hasNext, setHasNext] = useState(true);
 
   useEffect(() => {
-    fetchData(currentPage);
+    fetchData(FetchCurrentPage);
   }, []);
 
   const fetchData = async (page) => {
     try {
       const res = await getBooksByPage(page);
-      dispatch(setBooks(res.length > 3 ? res.splice(1, res.length) : res));
-      setFetchCurrentPage(page + 1);
+      // Check if the last element is null
+      const lastElementIsNull = res[res.length - 1] === null;
+      // Update hasNext flag
+      setHasNext(!lastElementIsNull);
+      // Remove the null element if present
+      if (lastElementIsNull) {
+        res.pop();
+      }
+      // Dispatch the books
+      dispatch(setBooks(res));
+      // Update current page
+      setFetchCurrentPage(page);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -35,22 +47,23 @@ export default function RabbiBooks() {
 
   const books = useSelector((state) => state.book.Books);
 
-  const handleSearchBooks = async (s) => {
+  const handleSearchBooks = async (s, page) => {
     try {
-      setIsSearch(true); // Set isSearch to true when searching
-      setIsFilter(false); // Set isFilter to false when searching
       if (s !== "") {
-        if (s === prevStr) {
-          const res = await getSearchBooksByPage(s, currentPage);
-          dispatch(setBooks(res.length > 3 ? res.splice(1, res.length) : res));
-          setCurrentPage((prevPage) => prevPage + 1);
-          setPrevStr(s);
-        } else {
-          const res = await getSearchBooksByPage(s, 1);
-          dispatch(setBooks(res.length > 3 ? res.splice(1, res.length) : res));
-          setCurrentPage(currentPage+1);
-          setPrevStr(s);
+        page = page || 1;
+        setIsSearch(true); // Set isSearch to true when searching
+        setIsFilter(false); // Set isFilter to false when searching
+        const res = await getSearchBooksByPage(s,s === prevStr ? page : 1);
+        const lastElementIsNull = res[res.length - 1] === null;
+        // Update hasNext flag
+        setHasNext(!lastElementIsNull);
+        // Remove the null element if present
+        if (lastElementIsNull) {
+          res.pop();
         }
+        setCurrentPage(page);
+        dispatch(setBooks(res));
+        setPrevStr(s);
       } else {
         setPrevStr("");
         setCurrentPage(1);
@@ -64,20 +77,37 @@ export default function RabbiBooks() {
 
   const handleNextPage = () => {
     isSearch
-      ? handleSearchBooks(prevStr)
+      ? handleSearchBooks(prevStr, currentPage + 1)
       : isFilter
-        ? handleFilterCategory()
-        : fetchData(currentPage);
+        ? handleFilterCategory(filterCategory, currentPage + 1)
+        : fetchData(FetchCurrentPage + 1);
+  };
+  const handlePrevPage = () => {
+    isSearch
+      ? handleSearchBooks(prevStr, currentPage - 1)
+      : isFilter
+        ? handleFilterCategory(filterCategory, currentPage - 1)
+        : fetchData(FetchCurrentPage - 1);
   };
 
-  const handleFilterCategory = async (str) => {
+  const handleFilterCategory = async (str, page) => {
     try {
-      if (str.length !== 0) {
-        const res = await getFilterBooksByPage(str, currentPage);
-        dispatch(setBooks(res));
-        setCurrentPage(currentPage + 1);
+      if (str !== "הצג הכל") {
+        page = page || 1;
         setIsSearch(false); // Set isSearch to false when filtering
         setIsFilter(true); // Set isFilter to true when filtering
+        setCurrentPage(page);
+        debugger
+        const res = await getFilterBooksByPage(str,filterCategory===str?page:1);
+        const lastElementIsNull = res[res.length - 1] === null;
+        // Update hasNext flag
+        setHasNext(!lastElementIsNull);
+        // Remove the null element if present
+        if (lastElementIsNull) {
+          res.pop();
+        }
+        dispatch(setBooks(res));
+        setFilterCategory(str);
       } else {
         setCurrentPage(1);
         fetchData(1);
@@ -118,7 +148,15 @@ export default function RabbiBooks() {
             return <BookGrid index={index} book={book} key={index} />;
           })}
       </Grid>
-      <Button disabled={books.length < 3} onClick={() => handleNextPage()}>
+      <Button
+        disabled={
+          isFilter || isSearch ? currentPage === 1 : FetchCurrentPage === 1
+        }
+        onClick={() => handlePrevPage()}
+      >
+        הקודם
+      </Button>
+      <Button disabled={!hasNext} onClick={() => handleNextPage()}>
         הבא
       </Button>
     </Box>

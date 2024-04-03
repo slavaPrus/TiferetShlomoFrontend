@@ -1,7 +1,7 @@
 import api from '../api';
 
 const getBooksByPage = async (page) => {
-  try {
+    try {
     const response = await api.get(`/books/getBooksByPage/${page}`);
     return response.data;
   } catch (error) {
@@ -11,6 +11,7 @@ const getBooksByPage = async (page) => {
 };
 const getSearchBooksByPage = async (str,page) => {
   try {
+    debugger
     const response = await api.get(`/books/getSearchBooksByPage?str=${str}&page=${page}`);
     return response.data;
   } catch (error) {

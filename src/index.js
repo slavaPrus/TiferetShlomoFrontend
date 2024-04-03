@@ -7,10 +7,16 @@ import { BrowserRouter } from 'react-router-dom';
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from 'react-redux'
 import bookSlice from './features/bookSlice';
+import userSlice from './features/userSlice';
+import markSlice from './features/markSlice';
+import testSlice from './features/testSlice';
 
 const store = configureStore({
   reducer:{
       book:bookSlice,
+      users:userSlice,
+      marks:markSlice,
+      test:testSlice,
   }
 })
 const root = ReactDOM.createRoot(document.getElementById('root'));
