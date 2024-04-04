@@ -46,11 +46,11 @@ export default function SignIn() {
     const data = new FormData(event.currentTarget);
     const email = data.get("email");
     const password = data.get("password");
-
     if (email && password) {
       try {
         const response = await Signin({ email, password });
         dispatch(setOneUser(response));
+        localStorage.setItem('user', JSON.stringify(response));
         alert("התחברת בהצלחה");
         navigate("../privateArea");
       } catch (error) {
