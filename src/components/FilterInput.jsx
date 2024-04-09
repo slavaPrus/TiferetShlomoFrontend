@@ -7,8 +7,8 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
-import { getAllBooks } from "../../utils/BookUtil";
-import { setBooks } from "../../features/bookSlice";
+import { getAllBooks } from "../utils/BookUtil";
+import { setBooks } from "../features/bookSlice";
 import { useDispatch } from "react-redux";
 
 const ITEM_HEIGHT = 48;

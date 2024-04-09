@@ -1,6 +1,6 @@
 import { Box} from "@mui/material";
 import React from "react";
-import image1 from "../../pictures/image1.jpg";
+import image1 from "../pictures/image1.jpg";
 
 const HomePage = ()=>{
   const style={bgcolor:"blue", height:"150px" ,width:"120px" ,borderRadius:"25px"

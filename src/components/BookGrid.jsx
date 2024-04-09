@@ -1,5 +1,5 @@
 import { Box, Button, Card, Grid, Typography } from "@mui/material";
-import bamidbar from "../../src/pictures/bamidbar.png";
+import bamidbar from "../pictures/bamidbar.png";
 import { useNavigate } from "react-router-dom";
 import { handleAddCart } from "./cartHandle";
 

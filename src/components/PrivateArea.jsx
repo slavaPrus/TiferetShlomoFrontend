@@ -1,9 +1,9 @@
 import { Box, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getMarkById } from "../../utils/MarkUtil";
-import { setMarks } from "../../features/markSlice";
-import { setOneUser } from "../../features/userSlice";
+import { getMarkById } from "../utils/MarkUtil";
+import { setMarks } from "../features/markSlice";
+import { setOneUser } from "../features/userSlice";
 import { useNavigate } from "react-router-dom";
 
 const PrivateArea = () => {

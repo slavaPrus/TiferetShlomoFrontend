@@ -15,30 +15,38 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Outlet, useNavigate } from "react-router-dom";
-import { AccountCircle } from "@mui/icons-material";
+import { AccountCircle, Padding } from "@mui/icons-material";
 import { Menu, MenuItem } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { setOneUser } from "../features/userSlice";
 
 const drawerWidth = 240;
 const navItems = [
   { name: "אודות", link: "about-us" },
   { name: "ספרי מרן", link: "rabbi-books" },
   { name: "עגלה", link: "cart" },
-
+  { name: "עריכת מנהל", link: "admin" },
+  { name: "מבחנים", link: "HalachaTests" },
 ];
 //  'ספרים', 'שיעורים','עלונים', 'שני הלכות ליום', 'מבחנים בהלכה','תולדות חייו', 'לזכרו', 'חנות','תרומות', 'צור קשר'];
-
-const profileNavItems = [
-  { name: "התחברות", link: "signIn" },
-  { name: "הרשמה", link: "signUp" },
-  { name: "אזור אישי", link: "privateArea" },
-];
 
 function DrawerAppBar(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const user = useSelector((state) => state.users.oneUser);
+  const dispatch = useDispatch();
 
+  React.useEffect(() => {
+    let userLocal = localStorage.getItem("user");
+    console.log("userLocal ", userLocal);
+    if (user == null) {
+      if (userLocal) {
+        dispatch(setOneUser(JSON.parse(userLocal)));
+      }
+    }
+  }, [user]);
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -50,6 +58,12 @@ function DrawerAppBar(props) {
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
+
+  const profileNavItems = [
+    { name: "התחברות", link: "signIn", disabled: user !== null },
+    { name: "הרשמה", link: "signUp", disabled: user !== null },
+    { name: "אזור אישי", link: "privateArea", disabled: user === null },
+  ];
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
@@ -76,12 +90,20 @@ function DrawerAppBar(props) {
     window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <>
+    <Box>
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
         <AppBar component="nav" sx={{ backgroundColor: "purple" }}>
-          <Toolbar sx={{ p: 0, direction: "rtl", justifyContent:"space-between"}}>
-            <Box sx={{display:"flex", flexDirection:"row",alignItems:"baseline"}}>
+          <Toolbar
+            sx={{ p: 0, direction: "rtl", justifyContent: "space-between" }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "baseline",
+              }}
+            >
               <IconButton
                 color="inherit"
                 aria-label="open drawer"
@@ -104,7 +126,8 @@ function DrawerAppBar(props) {
                 {navItems.map((item, index) => (
                   <Button
                     onClick={() => navigate(item.link)}
-                    key={item.index}
+                    disabled={item.disabled}
+                    key={index}
                     sx={{ color: "#fff" }}
                   >
                     {item.name}
@@ -175,8 +198,9 @@ function DrawerAppBar(props) {
           <Typography></Typography>
         </Box>
       </Box>
+
       <Outlet />
-    </>
+    </Box>
   );
 }
 

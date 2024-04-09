@@ -7,9 +7,9 @@ import {
   getBooksByPage,
   getFilterBooksByPage,
   getSearchBooksByPage,
-} from "../../utils/BookUtil";
-import { setBooks } from "../../features/bookSlice";
-import BookGrid from "../BookGrid";
+} from "../utils/BookUtil";
+import { setBooks } from "../features/bookSlice";
+import BookGrid from "./BookGrid";
 
 export default function RabbiBooks() {
   const dispatch = useDispatch();
@@ -140,7 +140,7 @@ export default function RabbiBooks() {
         container
         width={"80%"}
         flexWrap={"wrap"}
-        sx={{ p: "10px", justifyContent: "space-between" }}
+        sx={{ p: "10px", justifyContent: "space-between",rowGap:"20px"}}
       >
         {books &&
           books.length > 0 &&

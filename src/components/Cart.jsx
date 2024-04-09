@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import BookGrid from "../BookGrid";
+import BookGrid from "./BookGrid";
 import { Box, Button } from "@mui/material";
-import { handleDeleteBookFromCart } from "../cartHandle";
+import { handleDeleteBookFromCart } from "./cartHandle";
 
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
