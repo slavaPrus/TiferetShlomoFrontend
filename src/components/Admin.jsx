@@ -42,7 +42,29 @@ export default function Admin() {
       submit: handleAddFlyer,
     },
     {
-      name: "שיעור",
+      name: "video שיעור",
+      fields: [
+        "LessonName",
+        "LessonSubjectId",
+        "LessonUrl",
+        "LessonData",
+        "LessonTypeId",
+      ],
+      submit: handleAddLesson,
+    },
+    {
+      name: "audio שיעור",
+      fields: [
+        "LessonName",
+        "LessonSubjectId",
+        "LessonUrl",
+        "LessonData",
+        "LessonTypeId",
+      ],
+      submit: handleAddLesson,
+    },
+    {
+      name: "מאמר שיעור",
       fields: [
         "LessonName",
         "LessonSubjectId",
@@ -55,7 +77,11 @@ export default function Admin() {
     {
       name: "2 הלכות ביום",
       fields: [
-       
+        "LessonName",
+        "LessonSubjectId",
+        "LessonUrl",
+        "LessonData",
+        "LessonTypeId",
       ],
       submit: handleAddLesson,
     },

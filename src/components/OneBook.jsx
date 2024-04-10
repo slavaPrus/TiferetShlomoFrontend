@@ -2,6 +2,8 @@ import { Box, Button, Typography } from '@mui/material'
 import React from 'react'
 import bamidbar from "../pictures/bamidbar.png";
 import { Link, useLocation } from 'react-router-dom';
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+
 
 
 export default function OneBook() {
@@ -22,7 +24,7 @@ export default function OneBook() {
         <Typography sx={{fontSize:"15px", fontWeight:"500"}}>{describe}</Typography>
         <Link variant='contained' onClick={()=>{handleWatchBook()}}>לעיון בספר</Link>
         <Typography sx={{fontSize:"25px", fontWeight:"800",textAlign: "center" }}>{cost} ₪</Typography>
-        <Button variant='contained'>הוסף לעגלה</Button>
+        <Button variant='contained'>הוסף לעגלה<ShoppingCartIcon /></Button>
         </Box>
         <img src={bamidbar} height={"600px"} />
     </Box>

@@ -1,6 +1,7 @@
 .App {
   text-align: center;
-}
+  max-width: 100vw; /* מקסימום של 100% מרוחב המסך */
+  overflow-x: hidden; /* מונע גלילה אופקית */}
 
 .myText {
   font-family: 'yehuda', sans-serif;

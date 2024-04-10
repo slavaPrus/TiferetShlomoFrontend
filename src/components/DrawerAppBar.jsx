@@ -15,7 +15,9 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Outlet, useNavigate } from "react-router-dom";
-import { AccountCircle, Padding } from "@mui/icons-material";
+import { AccountCircle } from "@mui/icons-material";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import { Menu, MenuItem } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setOneUser } from "../features/userSlice";
@@ -24,9 +26,12 @@ const drawerWidth = 240;
 const navItems = [
   { name: "אודות", link: "about-us" },
   { name: "ספרי מרן", link: "rabbi-books" },
-  { name: "עגלה", link: "cart" },
-  { name: "עריכת מנהל", link: "admin" },
   { name: "מבחנים", link: "HalachaTests" },
+];
+const sideNavItems = [
+  { name: "עגלה", link: "cart", icon: <ShoppingCartIcon /> },
+  { name: "עריכת מנהל", link: "admin", icon: <ModeEditIcon /> },
+  { name: "החשבון שלי", icon: <AccountCircle /> },
 ];
 //  'ספרים', 'שיעורים','עלונים', 'שני הלכות ליום', 'מבחנים בהלכה','תולדות חייו', 'לזכרו', 'חנות','תרומות', 'צור קשר'];
 
@@ -37,7 +42,6 @@ function DrawerAppBar(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const user = useSelector((state) => state.users.oneUser);
   const dispatch = useDispatch();
-
   React.useEffect(() => {
     let userLocal = localStorage.getItem("user");
     console.log("userLocal ", userLocal);
@@ -136,40 +140,62 @@ function DrawerAppBar(props) {
               </Box>
             </Box>
 
-            <Box>
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                {profileNavItems.map((item, index) => {
-                  return (
-                    <MenuItem key={index} onClick={() => navigate(item.link)}>
-                      {item.name}
+            <Box display={"flex"} flexDirection={"row"} padding={0}>
+              {sideNavItems.map((item, index) => {
+                return (
+                  <React.Fragment key={index}>
+                    <MenuItem
+                      sx={{ padding: "0" }}
+                      onClick={() => navigate(item.link)}
+                    >
+                      <IconButton
+                        size="large"
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        onClick={item.name === "החשבון שלי" ? handleMenu : null}
+                        color="inherit"
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          padding: "0 8px",
+                        }}
+                      >
+                        {item.icon}
+                        <Typography fontSize={"10px"}>{item.name}</Typography>
+                      </IconButton>
                     </MenuItem>
-                  );
-                })}
-              </Menu>
+                    {item.name === "החשבון שלי" && (
+                      <Menu
+                        id="menu-appbar"
+                        anchorEl={anchorEl}
+                        anchorOrigin={{
+                          vertical: "top",
+                          horizontal: "right",
+                        }}
+                        keepMounted
+                        transformOrigin={{
+                          vertical: "top",
+                          horizontal: "right",
+                        }}
+                        open={Boolean(anchorEl)}
+                        onClose={handleClose}
+                      >
+                        {profileNavItems.map((profileItem, index) => {
+                          return (
+                            <MenuItem
+                              key={index}
+                              onClick={() => navigate(profileItem.link)}
+                            >
+                              {profileItem.name}
+                            </MenuItem>
+                          );
+                        })}
+                      </Menu>
+                    )}
+                  </React.Fragment>
+                );
+              })}
             </Box>
           </Toolbar>
         </AppBar>
