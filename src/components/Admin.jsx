@@ -109,11 +109,11 @@ export default function Admin() {
     }));
   };
   const textFieldStyle = {
-   width:"40%"
+    width: "40%",
   };
 
   return (
-    <div style={{display:"flex", flexDirection:"column"}} >
+    <div style={{ display: "flex", flexDirection: "column" }}>
       <Box
         display={"flex"}
         flexDirection={"row"}
@@ -148,11 +148,20 @@ export default function Admin() {
           ))}
         </TextField>
       </Box>
-      <Divider sx={{margin:"10px"}}/>
-      <Grid container sx={{justifyContent:"center" ,margin:"20px",padding:"20px",gap:"10px"}}>
+      <Divider sx={{ margin: "10px" }} />
+      <Grid
+        container
+        sx={{
+          justifyContent: "center",
+          margin: "20px",
+          padding: "20px",
+          gap: "10px",
+        }}
+      >
         {selectedItem.fields.map((field, index) => (
           <Grid item xs={3}>
             <TextField
+              type={field === "Picture" ? "file" : "text"}
               sx={textFieldStyle}
               key={index}
               label={field}
@@ -165,7 +174,12 @@ export default function Admin() {
         ))}
       </Grid>
 
-      <button style={{display:"flex",alignSelf:"center"}} onClick={() => selectedItem.submit(formData)}>אישור</button>
+      <button
+        style={{ display: "flex", alignSelf: "center" }}
+        onClick={() => selectedItem.submit(formData)}
+      >
+        אישור
+      </button>
     </div>
   );
 }

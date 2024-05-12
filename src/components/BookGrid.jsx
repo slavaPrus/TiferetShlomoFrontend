@@ -3,13 +3,32 @@ import bamidbar from "../pictures/bamidbar.png";
 import { useNavigate } from "react-router-dom";
 import { handleAddCart } from "./cartHandle";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { useSelector } from "react-redux";
+import { deleteBook } from "../utils/BookUtil";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
 
-
-export const BookGrid = ({ book, index }) => {
-  const { bookName, cost, img } = book;
+export const BookGrid = ({ book, index, setOpen, setSelectedBook,setIsNewBook }) => {
+  const oneUser = useSelector((state) => state.users.oneUser);
+  const { bookName, cost, pictureData } = book;
   const navigate = useNavigate();
   const handleClick = () => {
     navigate("/one-book", { state: book });
+  };
+
+  const handelDeleteBook = async () => {
+    try {
+      await deleteBook(book.bookId).then((res) => {
+        alert("המחיקה בוצעה בהצלחה");
+      });
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  const handelClickEditBook = () => {
+    setSelectedBook(book);
+    setIsNewBook(false);
+    setOpen(true);
   };
 
   return (
@@ -41,7 +60,7 @@ export const BookGrid = ({ book, index }) => {
       >
         <img
           onClick={handleClick}
-          src={bamidbar}
+          src={`data:image/jpeg;base64,${pictureData}`}
           style={{
             height: "100%",
             width: "100%",
@@ -58,10 +77,23 @@ export const BookGrid = ({ book, index }) => {
         >
           <Typography sx={{ textAlign: "center" }}>{bookName}</Typography>
           <Typography sx={{ textAlign: "center" }}>{cost} ₪</Typography>
-          <Button onClick={() => handleAddCart(book)}>
-            הוסף לעגלה
-            <ShoppingCartIcon />
-          </Button>
+          {oneUser && oneUser.userType === 2 ? (
+            <Button onClick={() => handleAddCart(book)}>
+              הוסף לעגלה
+              <ShoppingCartIcon />
+            </Button>
+          ) : (
+            <>
+              <Button onClick={handelDeleteBook}>
+                מחיקה
+                <ShoppingCartIcon />
+              </Button>
+              <Button onClick={handelClickEditBook} >
+                עריכה
+                <ModeEditIcon />
+              </Button>
+            </>
+          )}
         </Box>
       </Card>
     </Grid>

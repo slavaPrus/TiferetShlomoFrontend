@@ -30,7 +30,6 @@ const navItems = [
 ];
 const sideNavItems = [
   { name: "עגלה", link: "cart", icon: <ShoppingCartIcon /> },
-  { name: "עריכת מנהל", link: "admin", icon: <ModeEditIcon /> },
   { name: "החשבון שלי", icon: <AccountCircle /> },
 ];
 //  'ספרים', 'שיעורים','עלונים', 'שני הלכות ליום', 'מבחנים בהלכה','תולדות חייו', 'לזכרו', 'חנות','תרומות', 'צור קשר'];
@@ -95,9 +94,8 @@ function DrawerAppBar(props) {
 
   return (
     <Box>
-      <Box sx={{ display: "flex" }}>
-        <CssBaseline />
-        <AppBar component="nav" sx={{ backgroundColor: "purple" }}>
+      <Box>
+        <AppBar component="nav" sx={{ height:"10%",backgroundColor: "#0B1365" }}>
           <Toolbar
             sx={{ p: 0, direction: "rtl", justifyContent: "space-between" }}
           >

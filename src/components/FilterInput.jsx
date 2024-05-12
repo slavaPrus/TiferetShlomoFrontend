@@ -1,15 +1,8 @@
-import { useEffect, useState } from "react";
-import { useTheme } from "@mui/material/styles";
+import { useState } from "react";
 import Box from "@mui/material/Box";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import Chip from "@mui/material/Chip";
-import { getAllBooks } from "../utils/BookUtil";
-import { setBooks } from "../features/bookSlice";
-import { useDispatch } from "react-redux";
+import MenuItem from "@mui/material/MenuItem";
+import { useTheme } from "@mui/material/styles";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -22,38 +15,9 @@ const MenuProps = {
   },
 };
 
-const categoriesName = ["הצג הכל","הלכה", "מוסר", "אמונה וביטחון"];
-function getStyles(name, categoryName, theme) {
-  return {
-    fontWeight:
-      categoryName === name
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
-
-export default function FilterInput({ handleChange }) {
-  const dispatch = useDispatch();
-
-  // useEffect(() => {
-  // const fetchData = async () => {
-  //   try {
-  //     // Call your asynchronous function here, for example getAllBooks
-  //     const res = await getAllBooks();
-  //     dispatch(setBooks(res))
-  //     // Other logic after the async function completes
-  //   } catch (error) {
-  //     // Handle errors if necessary
-  //     console.error('Error fetching data:', error);
-  //   }
-  // };
-
-  // // Call the async function immediately
-  // fetchData();
-  // }, []);
+export default function FilterInput({ handleChange, categories }) {
   const theme = useTheme();
   const [categoryName, setCategoryName] = useState("");
-  // const[currentCategory,setCurrentCategory]= useState(false);
 
   const handleFilterChange = (event) => {
     const {
@@ -61,52 +25,55 @@ export default function FilterInput({ handleChange }) {
     } = event;
     const currentValue = categoryName === value ? "" : value;
     setCategoryName(currentValue);
-      // On autofill we get a stringified value.
-      // typeof value === "string" ? value.split(",") : value
-
-    // handleChange(value.length > 0 ? value : null);
     handleChange(currentValue);
   };
 
   return (
-    <div>
-      <FormControl
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "flex-start",
+        height: "3rem",
+        backgroundColor: "#F2F2F2",
+        borderRadius: "0.25rem",
+        width: "45%",
+        padding: "0 0.75rem",
+        gap: "0.25rem",
+      }}
+    >
+      <Select
+        displayEmpty
+        onChange={handleFilterChange}
+        MenuProps={MenuProps}
+        value={categoryName}
         sx={{
-          width: 300,
           display: "flex",
-          alignSelf: "center",
-          height: "60px",
-          flexGrow: 1,
-          borderRadius: "4px",
+          alignItems: "center",
+          justifyContent: "flex-start",
+          height: "3rem",
+          backgroundColor: "#F2F2F2",
+          borderRadius: "0.25rem",
+          width: "100%",
+          gap: "0.25rem",
+          boxShadow: 'none', '.MuiOutlinedInput-notchedOutline': { border: 0 }
+        }}
+      
+        renderValue={(selected) => {
+          if (!selected) {
+            return <span style={{ color: "#AAA" }}>קטגוריה</span>;
+          }
+          return selected;
         }}
       >
-        <InputLabel id="demo-multiple-chip-label">קטגוריה</InputLabel>
-        <Select
-          labelId="demo-multiple-chip-label"
-          id="demo-multiple-chip"
-          // value={categoryName}
-          variant="filled"
-          onChange={handleFilterChange}
-          sx={{ border: "2px black solid" }}
-          input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-          // renderValue={categoryName !== "" ?(selected) => (
-          //   <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-          //       <Chip key={selected} label={selected} />
-          //   </Box>
-          // ): null}
-          MenuProps={MenuProps}
-        >
-          {categoriesName.map((name) => (
-            <MenuItem
-              key={name}
-              value={name}
-              style={getStyles(name, categoryName, theme)}
-            >
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </div>
+        <MenuItem disabled value="">
+        </MenuItem>
+        {categories.map((name) => (
+          <MenuItem key={name} value={name}>
+            {name}
+          </MenuItem>
+        ))}
+      </Select>
+    </Box>
   );
 }

@@ -11,7 +11,6 @@ const getBooksByPage = async (page) => {
 };
 const getSearchBooksByPage = async (str,page) => {
   try {
-    debugger
     const response = await api.get(`/books/getSearchBooksByPage?str=${str}&page=${page}`);
     return response.data;
   } catch (error) {
@@ -50,7 +49,9 @@ const getBookById = async (id) => {
 
 const addBook = async (book) => {
   try {
-    const response = await api.post('books/InsertBook', book);
+    console.log("!!!book",book)
+    const response = await api.post('books', book);
+    console.log(response)
     return response.data;
   } catch (error) {
     console.error('Error in addBook:', error);
@@ -60,7 +61,8 @@ const addBook = async (book) => {
 
 const updateBook = async (book) => {
   try {
-    const response = await api.put('books/UpdateBook', book);
+    const response = await api.put(`books/${book.bookId}`, book);
+    console.log("!",response);
     return response.data;
   } catch (error) {
     console.error('Error in updateBook:', error);
@@ -70,7 +72,7 @@ const updateBook = async (book) => {
 
 const deleteBook = async (id) => {
   try {
-    const response = await api.get(`books/${id}`);
+    const response = await api.delete(`books/${id}`);
     return response.data;
   } catch (error) {
     console.error('Error in deleteBook:', error);

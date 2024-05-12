@@ -1,18 +1,20 @@
-export  const handleAddCart = (book) => {
-    let cartLocal = localStorage.getItem('cartItems');
-    let cartItems = cartLocal == null ? []: JSON.parse(cartLocal);
-    const existingItem = cartItems.find(item => item.id === book.bookId);
+export const handleAddCart = (book) => {
+  let cartLocal = localStorage.getItem("cartItems");
+  let cartItems = cartLocal == null ? [] : JSON.parse(cartLocal);
+  const existingItem = cartItems.find((item) => item.id === book.bookId);
 
-  if (existingItem) { // אם המוצר קיים בעגלה
+  if (existingItem) {
+    // אם המוצר קיים בעגלה
     // הוספת הכמות של המוצר החדש לכמות המוצר הקיים
     existingItem.quantity += book.quantity;
-  } else { // אם המוצר לא קיים בעגלה
+  } else {
+    // אם המוצר לא קיים בעגלה
     // הוספת המוצר החדש לעגלה
     cartItems.push(book);
   }
-    localStorage.setItem('cartItems', JSON.stringify(cartItems));
-    alert('נוסף לעגלה');
-  }
+  localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  alert("נוסף לעגלה");
+};
 export const handleDeleteBookFromCart = (bookToRemove) => {
   // Retrieve cart items from local storage
   let cartLocal = localStorage.getItem("cartItems");

@@ -2,36 +2,33 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
-import { FormControl } from "@mui/material";
 
 export default function SearchInput({ handleChange }) {
+  const container = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    height: "3rem",
+    backgroundColor: "#F2F2F2",
+    borderRadius: "0.25rem",
+    width: "45%",
+    padding: "0 0.75rem",
+    gap: "0.25rem",
+  };
   return (
-    <FormControl
-    display={"flex"}
-      sx={{
-        width: 300,
-        display: "flex",
-        alignSelf: "center",
-        height: "60px",
-        flexGrow: 1,
-        border: "2px solid black",
-        borderRadius: "4px",
-      }}
-    >
-      <Box display={"flex"} flexDirection={"row"} alignItems={"center"}sx={{ alignSelf: "center" }}>
-        <InputBase
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            color: "inherit",
-            width: "100%",
-          }}
-          placeholder="חיפוש..."
-          inputProps={{ "aria-label": "search" }}
-          onChange={(e) => handleChange(e.target.value)}
-        />
-        <SearchIcon />
-      </Box>
-    </FormControl>
+    <Box sx={container}>
+      <SearchIcon />
+      <InputBase
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          color: "inherit",
+          width: "100%",
+        }}
+        placeholder="חיפוש..."
+        inputProps={{ "aria-label": "search" }}
+        onChange={(e) => handleChange(e.target.value)}
+      />
+    </Box>
   );
 }
