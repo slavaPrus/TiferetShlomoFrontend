@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import FilterInput from "./FilterInput";
 import SearchInput from "./SearchInput";
-import { Box, Button, Grid } from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getBooksByPage,
@@ -10,7 +10,7 @@ import {
 } from "../utils/BookUtil";
 import { setBooks } from "../features/bookSlice";
 import BookGrid from "./BookGrid";
-import EditBookAdmin from "./EditBookAdmin";
+import EditObjectAdmin from "./EditObjectAdmin";
 import AddIcon from "@mui/icons-material/Add";
 
 export default function RabbiBooks() {
@@ -39,8 +39,10 @@ export default function RabbiBooks() {
   const [newBook, setNewBook] = useState(emptyBook);
   const [isNewBook, setIsNewBook] = useState(false);
   useEffect(() => {
-    fetchData(FetchCurrentPage);
-  }, []);
+    if (!open) {
+      fetchData(FetchCurrentPage);
+    }
+  }, [open]);
 
   const fetchData = async (page) => {
     try {
@@ -146,12 +148,13 @@ export default function RabbiBooks() {
   return (
     <>
       {
-        <EditBookAdmin
+        <EditObjectAdmin
           open={open}
           onClose={setOpen}
-          book={selectedBook}
-          setbook={setSelectedBook}
-          isNewBook={isNewBook}
+          objectType={"Book"}
+          objectData={selectedBook}
+          setObject={setSelectedBook}
+          isNewobject={isNewBook}
         />
       }
       <Box
@@ -165,25 +168,44 @@ export default function RabbiBooks() {
           display={"flex"}
           flexDirection={"row"}
           justifyContent={"space-between"}
-          width={"90%"}
+          width={"80%"}
+          padding={"45px"}
         >
-          <FilterInput
-            handleChange={handleFilterCategory}
-            categories={categories}
-          />
-          <SearchInput handleChange={handleSearchBooks} />
+          <Box
+            display={"flex"}
+            flexDirection={"row"}
+            justifyContent={"space-between"}
+            width={"50%"}
+            gap={"10px"}
+          >
+            <FilterInput
+              handleChange={handleFilterCategory}
+              categories={categories}
+            />
+            <SearchInput handleChange={handleSearchBooks} />
+          </Box>
+          <Typography variant="h4" color={"#0B1365"} fontWeight={"700"}>
+            ספרי מרן
+          </Typography>
         </Box>
-        {oneUser && oneUser.userType === 2 && (
+        {oneUser && oneUser.userType === 1 && (
           <Button onClick={handleClickAddBook}>
             הוספת ספר
             <AddIcon />
           </Button>
         )}
+
         <Grid
           container
           width={"80%"}
           flexWrap={"wrap"}
-          sx={{ p: "10px", justifyContent: "space-between", rowGap: "20px" }}
+          sx={{
+            border: "2px solid #e3e2e2",
+            borderRadius:"35px 35px 0 0",
+            p: "70px",
+            justifyContent: "space-between",
+            rowGap: "50px",
+          }}
         >
           {books &&
             books.length > 0 &&

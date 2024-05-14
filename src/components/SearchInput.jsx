@@ -11,7 +11,7 @@ export default function SearchInput({ handleChange }) {
     height: "3rem",
     backgroundColor: "#F2F2F2",
     borderRadius: "0.25rem",
-    width: "45%",
+    width: "100%",
     padding: "0 0.75rem",
     gap: "0.25rem",
   };
@@ -24,6 +24,8 @@ export default function SearchInput({ handleChange }) {
           flexDirection: "row",
           color: "inherit",
           width: "100%",
+          boxShadow: 'none', '.MuiOutlinedInput-notchedOutline': { border: 0 }
+
         }}
         placeholder="חיפוש..."
         inputProps={{ "aria-label": "search" }}
