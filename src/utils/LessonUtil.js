@@ -1,8 +1,9 @@
 import api from '../api';
 
+
 const getAllLessons = async () => {
   try {
-    const response = await api.get('Lesson');
+    const response = await api.get('lessons');
     return response.data;
   } catch (error) {
     console.error('Error in getLessons:', error);
@@ -12,7 +13,7 @@ const getAllLessons = async () => {
 
 const getLessonById = async (id) => {
   try {
-    const response = await api.get(`Lesson/LessonById?id=${id}`);
+    const response = await api.get(`lessons/LessonById?id=${id}`);
     return response.data;
   } catch (error) {
     console.error('Error in getLessonById:', error);
@@ -22,7 +23,7 @@ const getLessonById = async (id) => {
 
 const addLesson = async (lesson) => {
   try {
-    const response = await api.post('Lesson/InsertLesson', lesson);
+    const response = await api.post('lessons/InsertLesson', lesson);
     return response.data;
   } catch (error) {
     console.error('Error in addLesson:', error);
@@ -32,7 +33,7 @@ const addLesson = async (lesson) => {
 
 const updateLesson = async (lesson) => {
   try {
-    const response = await api.put('Lesson/UpdateLesson', lesson);
+    const response = await api.put('lessons/UpdateLesson', lesson);
     return response.data;
   } catch (error) {
     console.error('Error in updateLesson:', error);
@@ -42,7 +43,7 @@ const updateLesson = async (lesson) => {
 
 const deleteLesson = async (id) => {
   try {
-    const response = await api.delete(`Lesson/DeleteLesson?id=${id}`);
+    const response = await api.delete(`lessons/DeleteLesson?id=${id}`);
     return response.data;
   } catch (error) {
     console.error('Error in deleteLesson:', error);
@@ -50,4 +51,35 @@ const deleteLesson = async (id) => {
   }
 };
 
-export { getAllLessons, getLessonById, addLesson, updateLesson, deleteLesson };
+const getLessonsByPage = async (page) => {
+  try {
+  const response = await api.get(`lessons/getLessonsByPage/${page}`);
+  return response.data;
+} catch (error) {
+  console.error('Error in getLessonsByPage:', error);
+  return null;
+}
+};
+
+const getSearchLessonsByPage = async (str,page) => {
+  try {
+  
+  const response = await api.get(`lessons/getSearchLessonsByPage?str=${str}&page=${page}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error in getSearchLessonsByPage:', error);
+    return null;
+  }
+};
+const getFilterLessonsByPage = async (str,page) => {
+  try {
+    const response = await api.get(`lessons/getFilterLessonsByPage?str=${str}&page=${page}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error in getFilterLessonsByPage:', error);
+    return null;
+  }
+};
+
+
+export { getLessonsByPage,getAllLessons, getLessonById, addLesson, updateLesson, deleteLesson ,getSearchLessonsByPage,getFilterLessonsByPage};

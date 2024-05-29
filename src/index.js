@@ -10,10 +10,15 @@ import bookSlice from './features/bookSlice';
 import userSlice from './features/userSlice';
 import markSlice from './features/markSlice';
 import testSlice from './features/testSlice';
+import lessonSlice from './features/lessonSlice';
+import flyerSlice from './features/flyerSlice';
+
 
 const store = configureStore({
   reducer:{
       book:bookSlice,
+      lesson:lessonSlice,
+      flyer:flyerSlice,
       users:userSlice,
       marks:markSlice,
       test:testSlice,

@@ -1,4 +1,33 @@
 import api from '../api';
+const getFlyersByPage = async (page) => {
+  try {
+  const response = await api.get(`flyers/getFlyersByPage/${page}`);
+  return response.data;
+} catch (error) {
+  console.error('Error in getFlyersByPage:', error);
+  return null;
+}
+};
+
+const getSearchFlyersByPage = async (str,page) => {
+  try {
+  
+  const response = await api.get(`flyers/getSearchFlyersByPage?str=${str}&page=${page}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error in getSearchFlyersByPage:', error);
+    return null;
+  }
+};
+const getFilterFlyersByPage = async (str,page) => {
+  try {
+    const response = await api.get(`flyers/getFilterFlyersByPage?str=${str}&page=${page}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error in getFilterFlyersByPage:', error);
+    return null;
+  }
+};
 
 const getAllFlyers = async () => {
   try {
@@ -50,4 +79,7 @@ const deleteFlyer = async (id) => {
   }
 };
 
-export { getAllFlyers, getFlyerById, addFlyer, updateFlyer, deleteFlyer };
+
+export { getAllFlyers, getFlyerById, addFlyer, updateFlyer, deleteFlyer,
+  getFilterFlyersByPage, getSearchFlyersByPage, getFlyersByPage
+ };
