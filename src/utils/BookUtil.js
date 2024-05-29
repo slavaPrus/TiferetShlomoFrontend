@@ -73,7 +73,7 @@ const updateBook = async (book) => {
 const deleteBook = async (id) => {
   try {
     const response = await api.delete(`books/${id}`);
-    return response.data;
+    return response;
   } catch (error) {
     console.error('Error in deleteBook:', error);
     throw error; // Rethrow the error

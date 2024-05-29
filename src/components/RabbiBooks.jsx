@@ -15,6 +15,7 @@ import AddIcon from "@mui/icons-material/Add";
 
 export default function RabbiBooks() {
   const dispatch = useDispatch();
+  const [alert, setAlert] = useState(null);
   const [FetchCurrentPage, setFetchCurrentPage] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [prevStr, setPrevStr] = useState("");
@@ -35,6 +36,7 @@ export default function RabbiBooks() {
     PictureData: "",
     Category: "",
     Cost: 0,
+    Stock: 0,
   };
   const [newBook, setNewBook] = useState(emptyBook);
   const [isNewBook, setIsNewBook] = useState(false);
@@ -154,7 +156,7 @@ export default function RabbiBooks() {
           objectType={"Book"}
           objectData={selectedBook}
           setObject={setSelectedBook}
-          isNewobject={isNewBook}
+          isNewObject={isNewBook}
         />
       }
       <Box
@@ -164,6 +166,20 @@ export default function RabbiBooks() {
         alignItems={"center"}
         gap={"10px"}
       >
+        {alert && (
+          <Box
+            position="fixed"
+            top={"15%"}
+            width="100%"
+            zIndex={1000}
+            display="flex"
+            justifyContent="center"
+            alignSelf={"center"}
+            padding={0}
+          >
+            {alert}
+          </Box>
+        )}
         <Box
           display={"flex"}
           flexDirection={"row"}
@@ -188,20 +204,19 @@ export default function RabbiBooks() {
             ספרי מרן
           </Typography>
         </Box>
-        {oneUser && oneUser.userType === 1 && (
+        {oneUser && oneUser.userType === 2 && (
           <Button onClick={handleClickAddBook}>
             הוספת ספר
             <AddIcon />
           </Button>
         )}
-
         <Grid
           container
           width={"80%"}
           flexWrap={"wrap"}
           sx={{
             border: "2px solid #e3e2e2",
-            borderRadius:"35px 35px 0 0",
+            borderRadius: "35px 35px 0 0",
             p: "70px",
             justifyContent: "space-between",
             rowGap: "50px",
@@ -218,6 +233,7 @@ export default function RabbiBooks() {
                   setOpen={setOpen}
                   setSelectedBook={setSelectedBook}
                   setIsNewBook={setIsNewBook}
+                  setAlert={setAlert}
                 />
               );
             })}

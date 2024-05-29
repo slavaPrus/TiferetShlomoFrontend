@@ -46,6 +46,9 @@ export default function FilterInput({ handleChange, categories }) {
         MenuProps={MenuProps}
         value={categoryName}
         sx={{
+          "& .MuiSelect-select": {
+            textAlign: "center"},
+          direction:"rtl",
           display: "flex",
           alignItems: "center",
           justifyContent: "flex-start",

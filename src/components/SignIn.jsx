@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -16,6 +16,7 @@ import { Signin } from "../utils/UserUtil";
 import { useDispatch } from "react-redux";
 import { setOneUser } from "../features/userSlice";
 import { useNavigate } from "react-router-dom";
+import { Alert } from "@mui/material";
 
 function Copyright(props) {
   return (
@@ -28,8 +29,9 @@ function Copyright(props) {
       {"Copyright © "}
       <Link color="inherit" href="https://mui.com/">
         Your Website
-      </Link>
+      </Link>{" "}
       {new Date().getFullYear()}
+      {"."}
     </Typography>
   );
 }
@@ -41,6 +43,8 @@ const defaultTheme = createTheme();
 export default function SignIn() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [alert, setAlert] = useState(null); // State for managing the alert
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -49,20 +53,21 @@ export default function SignIn() {
     if (email && password) {
       try {
         const response = await Signin({ email, password });
-        dispatch(setOneUser(response));
-        localStorage.setItem('user', JSON.stringify(response));
-        alert("התחברת בהצלחה");
-        navigate("../privateArea");
+        if (response.status === 204) {
+          setAlert({ severity: "error", message: "לא נמצא משתמש עם הפרטים שהזנת" });
+        } else {
+          dispatch(setOneUser(response.data));
+          localStorage.setItem("user", JSON.stringify(response.data));
+          setAlert({ severity: "success", message: "התחברת בהצלחה" });
+          navigate("../privateArea");
+        }
       } catch (error) {
         console.error("Error in Signin:", error);
-        alert(
-          error.status === 204
-            ? "לא נמצא משתמש עם הפרטים שהזנת"
-            : "אנא בדוק את שם המשתמש והסיסמא ארעה שגיאה בהתחברות"
-        );
+        setAlert({ severity: "error", message: "אנא בדוק את שם המשתמש והסיסמא ארעה שגיאה בהתחברות" });
       }
     }
   };
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
@@ -87,6 +92,7 @@ export default function SignIn() {
             noValidate
             sx={{ mt: 1 }}
           >
+            {alert && <Alert severity={alert.severity}>{alert.message}</Alert>}
             <TextField
               margin="normal"
               required

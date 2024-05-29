@@ -2,6 +2,7 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
+import { TextField } from "@mui/material";
 
 export default function SearchInput({ handleChange }) {
   const container = {
@@ -15,22 +16,29 @@ export default function SearchInput({ handleChange }) {
     padding: "0 0.75rem",
     gap: "0.25rem",
   };
+
+  const inputStyle = {
+    direction: "rtl",
+    display: "flex",
+    flexGrow: 1,
+    textAlign: "center", // Center the text horizontally
+    boxShadow: "none",
+    ".css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input": {
+      display: "flex",
+      textAlign: "center",
+    },
+
+    ".MuiOutlinedInput-notchedOutline": { border: 0 },
+  };
+
   return (
     <Box sx={container}>
-      <SearchIcon />
-      <InputBase
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          color: "inherit",
-          width: "100%",
-          boxShadow: 'none', '.MuiOutlinedInput-notchedOutline': { border: 0 }
-
-        }}
+      <TextField
+        sx={inputStyle}
         placeholder="חיפוש..."
-        inputProps={{ "aria-label": "search" }}
         onChange={(e) => handleChange(e.target.value)}
       />
+      <SearchIcon />
     </Box>
   );
 }

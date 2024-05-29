@@ -14,7 +14,6 @@ import SignIn from './components/SignIn';
 import OneBook from './components/OneBook';
 import PrivateArea from './components/PrivateArea';
 import Cart from './components/Cart';
-import Admin from './components/Admin';
 
 function App() {
   return (
@@ -22,7 +21,6 @@ function App() {
         <Route path="/" element={<DrawerAppBar/>}>
           <Route path="/" element={<HomePage/>}> </Route>
           <Route path="/about-us" element={<AboutUs/>}> </Route>
-          <Route path="/admin" element={<Admin/>}> </Route>
           <Route path="/rabbi-books" element={<RabbiBooks/>}> </Route>
           <Route path="/one-book" element={<OneBook/>}></Route>       
           <Route path="/cart" element={<Cart/>}></Route>

@@ -1,18 +1,31 @@
 import React, { useEffect, useState } from "react";
-import BookGrid from "./BookGrid";
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Grid, TextField, Typography } from "@mui/material";
+import BookCart from "./BookCart";
+
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [alert, setAlert] = useState(null);
+
   useEffect(() => {
-    let cartLocal = localStorage.getItem("cartItems");
-    let cartBooks = cartLocal == null ? [] : JSON.parse(cartLocal);
+    const cartLocal = localStorage.getItem("cartItems");
+    const cartBooks = cartLocal ? JSON.parse(cartLocal) : [];
     setCartItems(cartBooks);
+    const totalPrice = cartBooks.reduce(
+      (total, book) => total + book.cost * book.quantity,
+      0
+    );
+    setTotalPrice(totalPrice);
   }, []);
+
   useEffect(() => {
-    let totalPrice = cartItems.reduce((total, book) => total + book.cost, 0);
+    const totalPrice = cartItems.reduce(
+      (total, book) => total + book.cost * book.quantity,
+      0
+    );
     setTotalPrice(totalPrice);
   }, [cartItems]);
+
   const container = {
     display: "flex",
     alignItems: "center",
@@ -28,6 +41,19 @@ export default function Cart() {
     fontWeight: "700",
     textAlign: "center",
   };
+
+  const handleDeleteBookFromCart = (bookToRemove) => {
+    const updatedCartItems = cartItems.filter(
+      (book) => book.bookId !== bookToRemove.bookId
+    );
+
+    setCartItems(updatedCartItems);
+    localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
+
+    setAlert(<Alert severity="success">הספר נמחק מהעגלה</Alert>);
+    setTimeout(() => setAlert(null), 3000); // Clear the alert after 3 seconds
+  };
+
   return (
     <Box
       display={"flex"}
@@ -36,6 +62,7 @@ export default function Cart() {
       alignItems={"center"}
       gap={"10px"}
     >
+      {alert && <Box width="80%">{alert}</Box>}
       <Box
         display={"flex"}
         flexDirection={"row"}
@@ -57,8 +84,8 @@ export default function Cart() {
                 width: "100%",
                 color: "inherit",
                 minWidth: "50px",
-                boxShadow: 'none', '.MuiOutlinedInput-notchedOutline': { border: 0 }
-
+                boxShadow: "none",
+                ".MuiOutlinedInput-notchedOutline": { border: 0 },
               }}
             >
               המשך לתשלום
@@ -72,10 +99,18 @@ export default function Cart() {
                 color: "inherit",
                 width: "100%",
                 boxShadow: "none",
+                textAlign: "center",
+                ".css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input": {
+                  display: "flex",
+                  textAlign: "center",
+                },
                 ".MuiOutlinedInput-notchedOutline": { border: 0 },
               }}
               value={`לתשלום ${totalPrice}`}
-            ></TextField>
+              InputProps={{
+                readOnly: true,
+              }}
+            />
           </Box>
         </Box>
         <Typography variant="h4" color={"#0B1365"} fontWeight={"700"}>
@@ -85,7 +120,7 @@ export default function Cart() {
       <Grid
         container
         width={"80%"}
-        flexWrap={"wrap"}
+        flexDirection={"column"}
         sx={{
           border: "2px solid #e3e2e2",
           borderRadius: "35px 35px 0 0",
@@ -94,13 +129,15 @@ export default function Cart() {
           rowGap: "50px",
         }}
       >
-        {cartItems.map((book, index) => {
-          return (
-            <Box sx={{ display: "flex", flexDirection: "column" }}>
-              <BookGrid key={index} book={book} index={index} isCart={true} />
-            </Box>
-          );
-        })}
+        {cartItems.map((book, index) => (
+          <Box sx={{ display: "flex", flexDirection: "column" }} key={index}>
+            <BookCart
+              handleDeleteBookFromCart={handleDeleteBookFromCart}
+              book={book}
+              index={index}
+            />
+          </Box>
+        ))}
       </Grid>
     </Box>
   );

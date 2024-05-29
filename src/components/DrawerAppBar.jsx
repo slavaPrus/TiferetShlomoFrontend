@@ -62,10 +62,19 @@ function DrawerAppBar(props) {
     setMobileOpen((prevState) => !prevState);
   };
 
+  const handleClickProfile = (profileItem) => {
+    if (profileItem.name === "התנתקות") {
+      dispatch(setOneUser(null));
+      localStorage.removeItem("user");
+    }
+    navigate(profileItem.link);
+  };
+
   const profileNavItems = [
     { name: "התחברות", link: "signIn", disabled: user !== null },
     { name: "הרשמה", link: "signUp", disabled: user !== null },
     { name: "אזור אישי", link: "privateArea", disabled: user === null },
+    { name: "התנתקות", link: "signIn", disabled: user === null },
   ];
 
   const drawer = (
@@ -100,14 +109,18 @@ function DrawerAppBar(props) {
           sx={{ height: "15%", backgroundColor: "#0B1365" }}
         >
           <Toolbar
-            sx={{ px: "20px", direction: "rtl", justifyContent: "space-between" }}
+            sx={{
+              px: "20px",
+              direction: "rtl",
+              justifyContent: "space-between",
+            }}
           >
             <Box
               sx={{
                 display: "flex",
                 flexDirection: "row",
                 alignItems: "center",
-                gap:"20px"
+                gap: "20px",
               }}
             >
               <IconButton
@@ -131,13 +144,13 @@ function DrawerAppBar(props) {
                   style={{ display: "flex", height: "100px" }}
                 />
               </Button>
-              <Box sx={{ gap:"20px",display: { xs: "none", sm: "flex" } }}>
+              <Box sx={{ gap: "20px", display: { xs: "none", sm: "flex" } }}>
                 {navItems.map((item, index) => (
                   <Button
                     onClick={() => navigate(item.link)}
                     disabled={item.disabled}
                     key={index}
-                    sx={{fontSize:"17px",color: "#fff" }}
+                    sx={{ fontSize: "17px", color: "#fff" }}
                   >
                     {item.name}
                   </Button>
@@ -187,14 +200,17 @@ function DrawerAppBar(props) {
                         onClose={handleClose}
                       >
                         {profileNavItems.map((profileItem, index) => {
-                          return (
-                            <MenuItem
-                              key={index}
-                              onClick={() => navigate(profileItem.link)}
-                            >
-                              {profileItem.name}
-                            </MenuItem>
-                          );
+                          if (!profileItem.disabled) {
+                            return (
+                              <MenuItem
+                                key={index}
+                                onClick={() => handleClickProfile(profileItem)}
+                                disabled={profileItem.disabled}
+                              >
+                                {profileItem.name}
+                              </MenuItem>
+                            );
+                          }
                         })}
                       </Menu>
                     )}
