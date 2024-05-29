@@ -22,7 +22,7 @@ function App() {
         <Route path="/" element={<DrawerAppBar/>}>
           <Route path="/" element={<HomePage/>}> </Route>
           <Route path="/about-us" element={<AboutUs/>}> </Route>
-          <Route path="/admin" element={<Admin/>}> </Route>
+          <Route path="/vod" element={<Vod/>}> </Route>
           <Route path="/rabbi-books" element={<RabbiBooks/>}> </Route>
           <Route path="/one-book" element={<OneBook/>}></Route>       
           <Route path="/cart" element={<Cart/>}></Route>
