@@ -2,7 +2,6 @@ import { useState } from "react";
 import Box from "@mui/material/Box";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import { useTheme } from "@mui/material/styles";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -16,7 +15,6 @@ const MenuProps = {
 };
 
 export default function FilterInput({ handleChange, categories }) {
-  const theme = useTheme();
   const [categoryName, setCategoryName] = useState("");
 
   const handleFilterChange = (event) => {
@@ -37,7 +35,7 @@ export default function FilterInput({ handleChange, categories }) {
         height: "3rem",
         backgroundColor: "#F2F2F2",
         borderRadius: "0.25rem",
-        width: "45%",
+        width: "100%",
         padding: "0 0.75rem",
         gap: "0.25rem",
       }}
@@ -48,6 +46,9 @@ export default function FilterInput({ handleChange, categories }) {
         MenuProps={MenuProps}
         value={categoryName}
         sx={{
+          "& .MuiSelect-select": {
+            textAlign: "center"},
+          direction:"rtl",
           display: "flex",
           alignItems: "center",
           justifyContent: "flex-start",

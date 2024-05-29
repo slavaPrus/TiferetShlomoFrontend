@@ -54,7 +54,7 @@ const Signin = async (userLogin) => {
   console.log(userLogin);
   try {
     const res = await api.post('user/signin', userLogin);
-    return res.data;
+    return res;
   } catch (error) {
     console.error('Error in Signin:', error);
     throw error;

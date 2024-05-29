@@ -17,10 +17,10 @@ import Button from "@mui/material/Button";
 import { Outlet, useNavigate } from "react-router-dom";
 import { AccountCircle } from "@mui/icons-material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import { Menu, MenuItem } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setOneUser } from "../features/userSlice";
+import Logo from "../pictures/Logo.png";
 
 const drawerWidth = 240;
 const navItems = [
@@ -65,10 +65,19 @@ function DrawerAppBar(props) {
     setMobileOpen((prevState) => !prevState);
   };
 
+  const handleClickProfile = (profileItem) => {
+    if (profileItem.name === "התנתקות") {
+      dispatch(setOneUser(null));
+      localStorage.removeItem("user");
+    }
+    navigate(profileItem.link);
+  };
+
   const profileNavItems = [
     { name: "התחברות", link: "signIn", disabled: user !== null },
     { name: "הרשמה", link: "signUp", disabled: user !== null },
     { name: "אזור אישי", link: "privateArea", disabled: user === null },
+    { name: "התנתקות", link: "signIn", disabled: user === null },
   ];
 
   const drawer = (
@@ -98,15 +107,23 @@ function DrawerAppBar(props) {
   return (
     <Box>
       <Box>
-        <AppBar component="nav" sx={{ height:"10%",backgroundColor: "#0B1365" }}>
+        <AppBar
+          component="nav"
+          sx={{ height: "15%", backgroundColor: "#0B1365" }}
+        >
           <Toolbar
-            sx={{ p: 0, direction: "rtl", justifyContent: "space-between" }}
+            sx={{
+              px: "20px",
+              direction: "rtl",
+              justifyContent: "space-between",
+            }}
           >
             <Box
               sx={{
                 display: "flex",
                 flexDirection: "row",
-                alignItems: "baseline",
+                alignItems: "center",
+                gap: "20px",
               }}
             >
               <IconButton
@@ -118,22 +135,25 @@ function DrawerAppBar(props) {
               >
                 <MenuIcon />
               </IconButton>
-              <Button onClick={() => navigate("/")}>
-                <Typography
-                  variant="h6"
-                  component="div"
-                  sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
-                >
-                  תפארת שלמה
-                </Typography>
+              <Button
+                display={"flex"}
+                flexDirection={"row"}
+                height={"100%"}
+                onClick={() => navigate("/")}
+              >
+                <img
+                  src={Logo}
+                  alt="logo"
+                  style={{ display: "flex", height: "100px" }}
+                />
               </Button>
-              <Box sx={{ display: { xs: "none", sm: "block" } }}>
+              <Box sx={{ gap: "20px", display: { xs: "none", sm: "flex" } }}>
                 {navItems.map((item, index) => (
                   <Button
                     onClick={() => navigate(item.link)}
                     disabled={item.disabled}
                     key={index}
-                    sx={{ color: "#fff" }}
+                    sx={{ fontSize: "17px", color: "#fff" }}
                   >
                     {item.name}
                   </Button>
@@ -146,11 +166,11 @@ function DrawerAppBar(props) {
                 return (
                   <React.Fragment key={index}>
                     <MenuItem
-                      sx={{ padding: "0" }}
+                      sx={{ padding: "10px" }}
                       onClick={() => navigate(item.link)}
                     >
                       <IconButton
-                        size="large"
+                        size="20px"
                         aria-label="account of current user"
                         aria-controls="menu-appbar"
                         aria-haspopup="true"
@@ -159,11 +179,11 @@ function DrawerAppBar(props) {
                         sx={{
                           display: "flex",
                           flexDirection: "column",
-                          padding: "0 8px",
+                          padding: "10px 8px",
                         }}
                       >
                         {item.icon}
-                        <Typography fontSize={"10px"}>{item.name}</Typography>
+                        <Typography fontSize={"15px"}>{item.name}</Typography>
                       </IconButton>
                     </MenuItem>
                     {item.name === "החשבון שלי" && (
@@ -183,14 +203,17 @@ function DrawerAppBar(props) {
                         onClose={handleClose}
                       >
                         {profileNavItems.map((profileItem, index) => {
-                          return (
-                            <MenuItem
-                              key={index}
-                              onClick={() => navigate(profileItem.link)}
-                            >
-                              {profileItem.name}
-                            </MenuItem>
-                          );
+                          if (!profileItem.disabled) {
+                            return (
+                              <MenuItem
+                                key={index}
+                                onClick={() => handleClickProfile(profileItem)}
+                                disabled={profileItem.disabled}
+                              >
+                                {profileItem.name}
+                              </MenuItem>
+                            );
+                          }
                         })}
                       </Menu>
                     )}
