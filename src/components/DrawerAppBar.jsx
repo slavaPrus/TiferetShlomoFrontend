@@ -26,7 +26,10 @@ const drawerWidth = 240;
 const navItems = [
   { name: "אודות", link: "about-us" },
   { name: "ספרי מרן", link: "rabbi-books" },
+  { name: "עלונים", link: "flyers" },
+  { name: "VOD", link: "vod" },
   { name: "מבחנים", link: "HalachaTests" },
+
 ];
 const sideNavItems = [
   { name: "עגלה", link: "cart", icon: <ShoppingCartIcon /> },

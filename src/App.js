@@ -6,6 +6,7 @@ import RabbiBooks from './components/RabbiBooks';
 import Lessons from './components/Lessons';
 import Flyers from './components/Flyers';
 import TwoHalachaPerDay from './components/TwoHalachaPerDay';
+import Vod from './components/Vod';
 import HalachaTests from './components/HalachaTests';
 import LifeStory from './components/LifeStory';
 import DrawerAppBar from './components/DrawerAppBar';
@@ -21,6 +22,7 @@ function App() {
         <Route path="/" element={<DrawerAppBar/>}>
           <Route path="/" element={<HomePage/>}> </Route>
           <Route path="/about-us" element={<AboutUs/>}> </Route>
+          <Route path="/vod" element={<Vod/>}> </Route>
           <Route path="/rabbi-books" element={<RabbiBooks/>}> </Route>
           <Route path="/one-book" element={<OneBook/>}></Route>       
           <Route path="/cart" element={<Cart/>}></Route>
