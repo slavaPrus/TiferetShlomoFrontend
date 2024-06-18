@@ -77,7 +77,7 @@ function DrawerAppBar(props) {
     { name: "התחברות", link: "signIn", disabled: user !== null },
     { name: "הרשמה", link: "signUp", disabled: user !== null },
     { name: "אזור אישי", link: "privateArea", disabled: user === null },
-    { name: "התנתקות", link: "signIn", disabled: user === null },
+    { name: "התנתקות", link: "", disabled: user === null },
   ];
 
   const drawer = (

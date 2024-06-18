@@ -50,7 +50,7 @@ export default function Cart() {
     setCartItems(updatedCartItems);
     localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
 
-    setAlert(<Alert severity="success">הספר נמחק מהעגלה</Alert>);
+    setAlert(<Alert variant="filled" sx={{width:"80%"}} severity="success">הספר נמחק מהעגלה</Alert>);
     setTimeout(() => setAlert(null), 3000); // Clear the alert after 3 seconds
   };
 

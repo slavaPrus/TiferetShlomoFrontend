@@ -5,25 +5,25 @@ import { getMarkById } from "../utils/MarkUtil";
 import { setMarks } from "../features/markSlice";
 import { setOneUser } from "../features/userSlice";
 import { useNavigate } from "react-router-dom";
+import OneTest from "./OneTest"; // Ensure the component name starts with a capital letter
 
 const PrivateArea = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.users.oneUser);
-  console.log("oneUser", user);
+
   useEffect(() => {
-    let userLocal = localStorage.getItem('user');
-    console.log('userLocal ', userLocal)
-    if(user == null){
-      if(userLocal){
-        dispatch(setOneUser(JSON.parse(userLocal)));
-      }
-      else{
-        navigate('/signIn');
-      }
+    let userLocal = localStorage.getItem("user");
+    if (!user && userLocal) {
+      dispatch(setOneUser(JSON.parse(userLocal)));
+    } else if (!userLocal) {
+      navigate("/signIn");
     }
-    user && getMarks();
+    if (user) {
+      getMarks();
+    }
   }, [user]);
+
   const getMarks = async () => {
     try {
       const res = await getMarkById(user.userId);
@@ -32,26 +32,64 @@ const PrivateArea = () => {
       console.log(error);
     }
   };
+
   const marks = useSelector((state) => state.marks.Marks);
+
   return (
-    <Box  sx={{direction:"rtl",display:"flex",flexDirection:"column",alignItems:"center"}}>
-      <h1>שלום {user?.firstName}</h1>
-      <Box>מבחנים</Box>
-      {console.log("marks", marks)}
-      {marks && marks.length > 0 ? (
-        marks.map((mark, index) => {
-          return (
-            <Box key={index+1} sx={{ display: "flex", flexDirection: "row" }}>
-              <Typography>
-                {index}. שם המבחן: {mark.test.describe}  
-              </Typography>
-              <Typography> ציון : {mark.markNumber}</Typography>
-            </Box>
-          );
-        })
-      ) : (
-        <Typography>לא נמצאו נתונים עבורך</Typography>
+    <Box
+      display={"flex"}
+      flexDirection={"column"}
+      justifyContent={"center"}
+      alignItems={"center"}
+      gap={"10px"}
+      mt={"30px"}
+    >
+      {alert && (
+        <Box
+          position="fixed"
+          top={"15%"}
+          width="100%"
+          zIndex={1000}
+          display="flex"
+          justifyContent="center"
+          alignSelf={"center"}
+          padding={0}
+        >
+          {alert}
+        </Box>
       )}
+      <h1>!שלום {user?.firstName}</h1>
+
+      <Box
+        display={"flex"}
+        justifyContent={"flex-end"}
+        width={"80%"}
+        padding={"45px"}
+      >
+        <Typography variant="h4" color={"#0B1365"} fontWeight={"700"}>
+          המבחנים שלך
+        </Typography>
+      </Box>
+      <Box
+        width={"80%"}
+        sx={{
+          display:"flex",
+          flexDirection:"column",
+          border: "2px solid #e3e2e2",
+          borderRadius: "35px 35px 0 0",
+          p: "70px",
+          justifyContent: "space-between",
+          rowGap: "50px",
+        }}
+      >
+        {marks && marks.length > 0 ? (
+          marks.map((mark, index) => (
+            <OneTest key={index} mark={mark} /> // Ensure you return the component
+          ))
+        ) : (
+          <Typography>לא נמצאו נתונים עבורך</Typography>
+        )}
+      </Box>
     </Box>
   );
 };

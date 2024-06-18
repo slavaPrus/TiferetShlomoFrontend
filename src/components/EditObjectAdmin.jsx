@@ -94,7 +94,7 @@ const EditObjectAdmin = (props) => {
               <Grid item xs={3} key={index}>
                 <TextField
                   type={objectField === "pictureData" ? "file" : "text"}
-                  label={objectField}
+                  label={objectField !== "pictureData" ? objectField:""}
                   variant="outlined"
                   fullWidth
                   margin="normal"
@@ -119,7 +119,7 @@ const EditObjectAdmin = (props) => {
         autoHideDuration={6000}
         onClose={handleCloseAlert}
       >
-        <Alert onClose={handleCloseAlert} severity={alert.severity}>
+        <Alert variant="filled" sx={{width:"80%"}} onClose={handleCloseAlert} severity={alert.severity}>
           {alert.message}
         </Alert>
       </Snackbar>

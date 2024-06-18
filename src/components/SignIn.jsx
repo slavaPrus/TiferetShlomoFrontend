@@ -92,7 +92,7 @@ export default function SignIn() {
             noValidate
             sx={{ mt: 1 }}
           >
-            {alert && <Alert severity={alert.severity}>{alert.message}</Alert>}
+            {alert && <Alert variant="filled" sx={{width:"80%"}}severity={alert.severity}>{alert.message}</Alert>}
             <TextField
               margin="normal"
               required
