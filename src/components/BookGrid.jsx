@@ -206,11 +206,7 @@ export const BookGrid = ({
               </IconButton>
             </Box>
           )}
-          {oneUser && oneUser.userType === 1 ? (
-            <Button disabled={!isInStock} onClick={() => handleAddCart(book)}>
-              הוסף לעגלה <ShoppingCartIcon />
-            </Button>
-          ) : (
+          {oneUser && oneUser.userType === 2 ?  (
             <Box
               display={"flex"}
               flexDirection={"row"}
@@ -227,6 +223,10 @@ export const BookGrid = ({
                 </Button>
               </>
             </Box>
+          ):(
+            <Button disabled={!isInStock} onClick={() => handleAddCart(book)}>
+              הוסף לעגלה <ShoppingCartIcon />
+            </Button>
           )}
         </Card>
       </Grid>

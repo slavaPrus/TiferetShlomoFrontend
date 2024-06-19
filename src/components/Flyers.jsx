@@ -6,7 +6,7 @@ import { Box, Button, Grid, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setFlyers } from "../features/flyerSlice";
 import FlyerGrid from "./FlyerGrid";
-// import EditFlyerAdmin from "./EditFlyerAdmin";
+import EditObjectAdmin from "./EditObjectAdmin";
 import AddIcon from "@mui/icons-material/Add";
 import {
   getFlyersByPage,
@@ -14,9 +14,16 @@ import {
   getSearchFlyersByPage,
 } from "../utils/FlyerUtil";
 
+const emptyFlyer = {
+  FlyerName: "",
+  FlyerUrl: "",
+  ParashatShavua: "",
+};
+
 export default function Flyers() {
+  const [newFlyer, setNewFlyer] = useState(emptyFlyer);
   const dispatch = useDispatch();
-  const [FetchCurrentPage, setFetchCurrentPage] = useState(1);
+  const [fetchCurrentPage, setFetchCurrentPage] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [prevStr, setPrevStr] = useState("");
   const [isFilter, setIsFilter] = useState(false);
@@ -25,53 +32,39 @@ export default function Flyers() {
   const [hasNext, setHasNext] = useState(true);
   const [open, setOpen] = useState(false);
   const [selectedFlyer, setSelectedFlyer] = useState(null);
+  const [isNewFlyer, setIsNewFlyer] = useState(false);
   const oneUser = useSelector((state) => state.users.oneUser);
+  const flyers = useSelector((state) => state.flyer.Flyers);
   const categories = ["בראשית", "שמות", "ויקרא", "במדבר", "דברים"];
 
-  const emptyFlyer = {
-    FlyerName: "",
-    FlyerUrl: "",
-    ParashatShavua: "",
-  };
-  const [newFlyer, setNewFlyer] = useState(emptyFlyer);
-  const [isNewFlyer, setIsNewFlyer] = useState(false);
   useEffect(() => {
-    fetchData(FetchCurrentPage);
+    fetchData(fetchCurrentPage);
   }, []);
 
   const fetchData = async (page) => {
     try {
       const res = await getFlyersByPage(page);
-      // Check if the last element is null
       const lastElementIsNull = res[res.length - 1] === null;
-      // Update hasNext flag
       setHasNext(!lastElementIsNull);
-      // Remove the null element if present
       if (lastElementIsNull) {
         res.pop();
       }
-      // Dispatch the flyer
       dispatch(setFlyers(res));
-      // Update current page
       setFetchCurrentPage(page);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-  const flyers = useSelector((state) => state.flyer.Flyers);
-
   const handleSearchFlyers = async (s, page) => {
     try {
       if (s !== "") {
         page = page || 1;
-        setIsSearch(true); // Set isSearch to true when searching
-        setIsFilter(false); // Set isFilter to false when searching
+        setIsSearch(true);
+        setIsFilter(false);
         const res = await getSearchFlyersByPage(s, s === prevStr ? page : 1);
         const lastElementIsNull = res[res.length - 1] === null;
-        // Update hasNext flag
         setHasNext(!lastElementIsNull);
-        // Remove the null element if present
         if (lastElementIsNull) {
           res.pop();
         }
@@ -93,33 +86,31 @@ export default function Flyers() {
     isSearch
       ? handleSearchFlyers(prevStr, currentPage + 1)
       : isFilter
-        ? handleFilterCategory(filterCategory, currentPage + 1)
-        : fetchData(FetchCurrentPage + 1);
+      ? handleFilterCategory(filterCategory, currentPage + 1)
+      : fetchData(fetchCurrentPage + 1);
   };
 
   const handlePrevPage = () => {
     isSearch
       ? handleSearchFlyers(prevStr, currentPage - 1)
       : isFilter
-        ? handleFilterCategory(filterCategory, currentPage - 1)
-        : fetchData(FetchCurrentPage - 1);
+      ? handleFilterCategory(filterCategory, currentPage - 1)
+      : fetchData(fetchCurrentPage - 1);
   };
 
   const handleFilterCategory = async (str, page) => {
     try {
       if (str !== "הצג הכל") {
         page = page || 1;
-        setIsSearch(false); // Set isSearch to false when filtering
-        setIsFilter(true); // Set isFilter to true when filtering
+        setIsSearch(false);
+        setIsFilter(true);
         setCurrentPage(page);
         const res = await getFilterFlyersByPage(
           str,
           filterCategory === str ? page : 1
         );
         const lastElementIsNull = res[res.length - 1] === null;
-        // Update hasNext flag
         setHasNext(!lastElementIsNull);
-        // Remove the null element if present
         if (lastElementIsNull) {
           res.pop();
         }
@@ -134,6 +125,7 @@ export default function Flyers() {
       console.error("Error fetching data:", error);
     }
   };
+
   const handleClickAddFlyer = () => {
     setOpen(true);
     setSelectedFlyer(newFlyer);
@@ -142,45 +134,30 @@ export default function Flyers() {
 
   return (
     <>
-      {
-        // <EditFlyerAdmin
-        //   open={open}
-        //   onClose={setOpen}
-        //   flyer={selectedFlyer}
-        //   setflyer={setSelectedFlyer}
-        //   isNewFlyer={isNewFlyer}
-        // />
-      }
+      <EditObjectAdmin
+        open={open}
+        onClose={setOpen}
+        flyer={selectedFlyer}
+        objectData={selectedFlyer}
+        setObject={setSelectedFlyer}
+        setFlyer={setSelectedFlyer}
+        isNewFlyer={isNewFlyer}
+      />
       <Box
-        display={"flex"}
-        flexDirection={"column"}
-        justifyContent={"center"}
-        alignItems={"center"}
-        gap={"10px"}
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+        gap="10px"
       >
         <Box
-          display={"flex"}
-          flexDirection={"row"}
-          justifyContent={"space-between"}
-          width={"80%"}
-          padding={"45px"}
+          display="flex"
+          flexDirection="row"
+          justifyContent="space-between"
+          width="90%"
         >
-          <Box
-            display={"flex"}
-            flexDirection={"row"}
-            justifyContent={"space-between"}
-            width={"50%"}
-            gap={"10px"}
-          >
-            <FilterInput
-              handleChange={handleFilterCategory}
-              categories={categories}
-            />
-            <SearchInput handleChange={handleSearchFlyers} />
-          </Box>
-          <Typography variant="h4" color={"#0B1365"} fontWeight={"700"}>
-            עלונים
-          </Typography>
+          <FilterInput handleChange={handleFilterCategory} categories={categories} />
+          <SearchInput handleChange={handleSearchFlyers} />
         </Box>
         {oneUser && oneUser.userType === 2 && (
           <Button onClick={handleClickAddFlyer}>
@@ -190,40 +167,30 @@ export default function Flyers() {
         )}
         <Grid
           container
-          width={"80%"}
-          flexWrap={"wrap"}
-          sx={{
-            border: "2px solid #e3e2e2",
-            borderRadius: "35px 35px 0 0",
-            p: "70px",
-            justifyContent: "space-between",
-            rowGap: "50px",
-          }}
+          width="80%"
+          flexWrap="wrap"
+          sx={{ p: "10px", justifyContent: "space-between", rowGap: "20px" }}
         >
           {flyers &&
             flyers.length > 0 &&
-            flyers.map((flyer, index) => {
-              return (
-                <FlyerGrid
-                  index={index}
-                  flyer={flyer}
-                  key={index}
-                  setOpen={setOpen}
-                  setSelectedFlyer={setSelectedFlyer}
-                  setIsNewFlyer={setIsNewFlyer}
-                />
-              );
-            })}
+            flyers.map((flyer, index) => (
+              <FlyerGrid
+                index={index}
+                flyer={flyer}
+                key={index}
+                setOpen={setOpen}
+                setSelectedFlyer={setSelectedFlyer}
+                setIsNewFlyer={setIsNewFlyer}
+              />
+            ))}
         </Grid>
         <Button
-          disabled={
-            isFilter || isSearch ? currentPage === 1 : FetchCurrentPage === 1
-          }
-          onClick={() => handlePrevPage()}
+          disabled={isFilter || isSearch ? currentPage === 1 : fetchCurrentPage === 1}
+          onClick={handlePrevPage}
         >
           הקודם
         </Button>
-        <Button disabled={!hasNext} onClick={() => handleNextPage()}>
+        <Button disabled={!hasNext} onClick={handleNextPage}>
           הבא
         </Button>
       </Box>

@@ -75,7 +75,7 @@ export const FlyerGrid = ({ flyer, index, setOpen, setSelectedFlyer,setIsNewFlye
           }}
           >
           <Typography sx={{ textAlign: "center" }}>{flyerName}</Typography>
-          {oneUser && oneUser.userType === 1 && (
+          {oneUser && oneUser.userType === 2 && (
             <>
               <Button onClick={handelDeleteFlyer}>
                 מחיקה

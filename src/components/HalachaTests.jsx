@@ -2,6 +2,28 @@ import React from "react";
 import { Box, Typography } from "@mui/material";
 
 const HalachaTests = () => {
+   // const handleImageChange = (e) => {
+  //   if (e.target.files[0]) {
+  //     setImage(e.target.files[0]);
+  //   }
+  // };
+
+  // const handleUpload = () => {
+  //   const storageRef = ref(storage, `images/${image.name}`);
+  //   uploadBytes(storageRef, image).then((snapshot) => {
+  //     getDownloadURL(snapshot.ref).then((url) => {
+  //       setUrl(url);
+  //       // שמירת ה-URL במסד הנתונים
+  //       axios.post('/api/save-image-url', { url })
+  //         .then(response => {
+  //           console.log('Image URL saved successfully:', response);
+  //         })
+  //         .catch(error => {
+  //           console.error('Error saving image URL:', error);
+  //         });
+  //     });
+  //   });
+  // };
   return (
     <Box
       display="flex"

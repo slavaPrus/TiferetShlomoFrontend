@@ -27,6 +27,7 @@ const navItems = [
   { name: "ספרי מרן", link: "rabbi-books" },
   { name: "עלונים", link: "flyers" },
   { name: "VOD", link: "vod" },
+  { name: "2 הלכות ביום", link: "two-halacha-per-day" },
   { name: "מבחנים", link: "HalachaTests" },
 
 ];
