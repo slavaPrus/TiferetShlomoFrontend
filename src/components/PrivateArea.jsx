@@ -87,7 +87,7 @@ const PrivateArea = () => {
             <OneTest key={index} mark={mark} /> // Ensure you return the component
           ))
         ) : (
-          <Typography>לא נמצאו נתונים עבורך</Typography>
+          <Typography sx={{display:"flex", alignSelf:"center",fontSize:"20px",bgcolor:"yellow"}} >לא נמצאו נתונים עבורך</Typography>
         )}
       </Box>
     </Box>

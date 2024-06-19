@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import FilterInput from "./FilterInput";
 import SearchInput from "./SearchInput";
-import { Box, Button, Grid } from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getLessonsByPage,
@@ -12,7 +12,6 @@ import { setLessons } from "../features/lessonSlice";
 import LessonGrid from "./LessonGrid";
 import EditLessonAdmin from "./EditLessonAdmin";
 import AddIcon from "@mui/icons-material/Add";
-
 
 export default function RabbiLessons() {
   const dispatch = useDispatch();
@@ -26,7 +25,23 @@ export default function RabbiLessons() {
   const [open, setOpen] = useState(false);
   const [selectedLesson, setSelectedLesson] = useState(null);
   const oneUser = useSelector((state) => state.users.oneUser);
-  const categories = ["מדרש רבה","שיעורים מספריו","חגים ומועדים","השקפה","הלווית הרב זצוק\"ל","סיפורים/הספדים/דברי שבח מפי מרן","קצרים","עין הרב ביהדות","רבנים/תלמידים מספרים","תיעודים מחיי הרב","סוגיות אקטואליות","טהרת הבית/שלום בית", "אמונה ובטחון", "מוסר","הלכה"];
+  const categories = [
+    "מדרש רבה",
+    "שיעורים מספריו",
+    "חגים ומועדים",
+    "השקפה",
+    'הלווית הרב זצוק"ל',
+    "סיפורים/הספדים/דברי שבח מפי מרן",
+    "קצרים",
+    "עין הרב ביהדות",
+    "רבנים/תלמידים מספרים",
+    "תיעודים מחיי הרב",
+    "סוגיות אקטואליות",
+    "טהרת הבית/שלום בית",
+    "אמונה ובטחון",
+    "מוסר",
+    "הלכה",
+  ];
 
   const emptyLesson = {
     LessonName: "",
@@ -164,13 +179,25 @@ export default function RabbiLessons() {
           display={"flex"}
           flexDirection={"row"}
           justifyContent={"space-between"}
-          width={"90%"}
+          width={"80%"}
+          padding={"45px"}
         >
-          <FilterInput
-            handleChange={handleFilterCategory}
-            categories={categories}
-          />
-          <SearchInput handleChange={handleSearchLessons} />
+          <Box
+            display={"flex"}
+            flexDirection={"row"}
+            justifyContent={"space-between"}
+            width={"50%"}
+            gap={"10px"}
+          >
+            <FilterInput
+              handleChange={handleFilterCategory}
+              categories={categories}
+            />
+            <SearchInput handleChange={handleSearchLessons} />
+          </Box>
+          <Typography variant="h4" color={"#0B1365"} fontWeight={"700"}>
+            שיעורי וידאו
+          </Typography>
         </Box>
         {oneUser && oneUser.userType === 2 && (
           <Button onClick={handleClickAddLesson}>
@@ -182,7 +209,13 @@ export default function RabbiLessons() {
           container
           width={"80%"}
           flexWrap={"wrap"}
-          sx={{ p: "10px", justifyContent: "space-between", rowGap: "20px" }}
+          sx={{
+            border: "2px solid #e3e2e2",
+            borderRadius: "35px 35px 0 0",
+            p: "70px",
+            justifyContent: "space-between",
+            rowGap: "50px",
+          }}
         >
           {Lessons &&
             Lessons.length > 0 &&
