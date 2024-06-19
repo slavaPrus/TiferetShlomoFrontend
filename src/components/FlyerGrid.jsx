@@ -8,7 +8,7 @@ import ModeEditIcon from "@mui/icons-material/ModeEdit";
 
 export const FlyerGrid = ({ flyer, index, setOpen, setSelectedFlyer,setIsNewFlyer }) => {
   const oneUser = useSelector((state) => state.users.oneUser);
-  const { flyerName, pictureData } = flyer;
+  const { flyerName, pictureData,flyerUrl } = flyer;
   const navigate = useNavigate();
   const handleClick = () => {
     navigate("/flyer", { state: flyer });
@@ -59,7 +59,8 @@ export const FlyerGrid = ({ flyer, index, setOpen, setSelectedFlyer,setIsNewFlye
       >
         <img
           onClick={handleClick}
-          src={`data:image/jpeg;base64,${pictureData}`}
+          src={flyerUrl??`data:image/jpeg;base64,${pictureData}`}
+          alt={flyerName}
           style={{
             height: "100%",
             width: "100%",

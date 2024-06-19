@@ -27,7 +27,7 @@ export const BookGrid = ({
   setAlert,
 }) => {
   const oneUser = useSelector((state) => state.users.oneUser);
-  const { bookId, bookName, cost, pictureData, stock } = book;
+  const { bookId, bookName, bookUrl, cost, pictureData, stock } = book;
   const navigate = useNavigate();
   const handleClick = () => {
     navigate("/one-book", { state: book, handleAddCart });
@@ -150,7 +150,7 @@ export const BookGrid = ({
           <img
             onClick={handleClick}
             src={
-              pictureData ? `data:image/jpeg;base64,${pictureData}` : bamidbar
+              pictureData ? `data:image/jpeg;base64,${pictureData}` :bookUrl?? bamidbar
             }
             style={{
               height: "100%",
