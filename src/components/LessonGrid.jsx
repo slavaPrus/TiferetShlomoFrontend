@@ -76,7 +76,7 @@ export const LessonGrid = ({ lesson, index, setOpen, setSelectedLesson,setIsNewL
           }}
         >
           <Typography sx={{ textAlign: "center" }}>{lessonName}</Typography>
-          {oneUser && oneUser.userType === 1 && (
+          {oneUser && oneUser.userType === 2 && (
             <>
               <Button onClick={handelDeleteLesson}>
                 מחיקה

@@ -12,6 +12,7 @@ import { setLessons } from "../features/lessonSlice";
 import LessonGrid from "./LessonGrid";
 import EditLessonAdmin from "./EditLessonAdmin";
 import AddIcon from "@mui/icons-material/Add";
+import EditObjectAdmin from "./EditObjectAdmin";
 
 
 export default function RabbiLessons() {
@@ -145,14 +146,22 @@ export default function RabbiLessons() {
   return (
     <>
       {
-        <EditLessonAdmin
+          <EditObjectAdmin
+            open={open}
+            onClose={setOpen}
+            objectType={"Lesson"}
+            objectData={selectedLesson}
+            setObject={setSelectedLesson}
+            isNewObject={isNewLesson}
+          />
+      }
+      {/* <EditLessonAdmin
           open={open}
           onClose={setOpen}
           Lesson={selectedLesson}
           setLesson={setSelectedLesson}
           isNewLesson={isNewLesson}
-        />
-      }
+        /> */}
       <Box
         display={"flex"}
         flexDirection={"column"}
@@ -174,7 +183,7 @@ export default function RabbiLessons() {
         </Box>
         {oneUser && oneUser.userType === 2 && (
           <Button onClick={handleClickAddLesson}>
-            הוספת ספר
+            הוספת שיעור
             <AddIcon />
           </Button>
         )}
