@@ -10,14 +10,29 @@ import {
   Box,
 } from "@mui/material";
 import * as BookUtil from "../utils/BookUtil";
-import { storage } from '../firebaseConfig';
+import * as FlyerUtil from "../utils/FlyerUtil";
+import * as LessonUtil from "../utils/LessonUtil";
+import { storage } from "../firebaseConfig";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import axios from 'axios';
+import axios from "axios";
 
 const EditObjectAdmin = (props) => {
-  const { onClose, open, objectType, objectData, setObject, isNewObject } = props;
-  const [alert, setAlert] = useState({ open: false, severity: "", message: "" });
+  const { onClose, open, objectType, objectData, setObject, isNewObject } =
+    props;
+  const [alert, setAlert] = useState({
+    open: false,
+    severity: "",
+    message: "",
+  });
   const [image, setImage] = useState(null);
+
+  const utilMap = {
+    Book: BookUtil,
+    Flyer: FlyerUtil,
+    Lesson: LessonUtil,
+  };
+
+  const selectedUtil = utilMap[objectType];
 
   useEffect(() => {
     console.log(objectData);
@@ -48,9 +63,13 @@ const EditObjectAdmin = (props) => {
 
   const handleUpdateObject = async () => {
     try {
-      const res = await BookUtil[`update${objectType}`](objectData);
+      const res = await selectedUtil[`update${objectType}`](objectData);
       console.log(res);
-      setAlert({ open: true, severity: "success", message: "העדכון בוצע בהצלחה" });
+      setAlert({
+        open: true,
+        severity: "success",
+        message: "העדכון בוצע בהצלחה",
+      });
       handleClose();
     } catch (error) {
       setAlert({ open: true, severity: "error", message: error.message });
@@ -59,7 +78,7 @@ const EditObjectAdmin = (props) => {
 
   const handleAddObject = async () => {
     try {
-      const res = await BookUtil[`add${objectType}`](objectData);
+      const res = await selectedUtil[`add${objectType}`](objectData);
       setAlert({ open: true, severity: "success", message: "הוסף בהצלחה" });
       handleClose();
     } catch (error) {
@@ -71,12 +90,13 @@ const EditObjectAdmin = (props) => {
     const storageRef = ref(storage, `images/${imageFile.name}`);
     await uploadBytes(storageRef, imageFile);
     const imageUrl = await getDownloadURL(storageRef);
-    await axios.post('/api/save-image-url', { url: imageUrl })
-      .then(response => {
-        console.log('Image URL saved successfully:', response);
+    await axios
+      .post("/api/save-image-url", { url: imageUrl })
+      .then((response) => {
+        console.log("Image URL saved successfully:", response);
       })
-      .catch(error => {
-        console.error('Error saving image URL:', error);
+      .catch((error) => {
+        console.error("Error saving image URL:", error);
       });
     return imageUrl;
   };
@@ -87,8 +107,18 @@ const EditObjectAdmin = (props) => {
 
   return (
     <>
-      <Dialog onClose={handleClose} open={open}>
-        <DialogTitle>{isNewObject ? "הוספה" : "עריכת"}</DialogTitle>
+      <Dialog
+        onClose={handleClose}
+        open={open}
+        PaperProps={{
+          sx: {
+            paddingTop: "50px",
+          },
+        }}
+      >
+        <DialogTitle display={"flex"} justifyContent={"center"}>
+          {isNewObject ? "הוספה" : `${objectType} עריכת  `}
+        </DialogTitle>
         <Grid
           container
           sx={{
@@ -102,36 +132,51 @@ const EditObjectAdmin = (props) => {
             Object.keys(objectData).map((objectField, index) => (
               <Grid item xs={3} key={index}>
                 <TextField
-                  type={objectField === "pictureData" ? "file" : "text"}
-                  label={objectField !== "pictureData" ? objectField : ""}
+                  type={objectField.includes("Url") ? "file" : "text"}
+                  label={objectField.includes("Url") ? objectField : ""}
                   variant="outlined"
                   fullWidth
                   margin="normal"
                   name={objectField}
-                  value={objectField !== "pictureData" ? objectData[objectField] : ""}
-                  onChange={(event) =>
-                    objectField === "pictureData"
-                      ? handleObjectChange(event)
-                      : handleObjectChange(event)
+                  value={
+                    objectField.includes("Url") ? "" : objectData[objectField]
                   }
+                  onChange={(event) => handleObjectChange(event)}
                 />
               </Grid>
             ))}
-          <Box display={"flex"} flexDirection={"column"} justifyContent={"center"} alignItems={"center"} marginTop={"20px"}>
-            <input type="file" onChange={handleObjectChange} name="pictureData" />
-          </Box>
-          <Button onClick={isNewObject ? handleAddObject : handleUpdateObject}>
+        </Grid>
+
+        <Box
+          display={"flex"}
+          flexDirection={"row"}
+          justifyContent={"center"}
+          alignItems={"center"}
+          marginTop={"20px"}
+          gap={"10px"}
+        >
+          <Button
+            variant="contained"
+            onClick={isNewObject ? handleAddObject : handleUpdateObject}
+          >
             אישור
           </Button>
-          <Button onClick={handleClose}>ביטול</Button>
-        </Grid>
+          <Button variant="contained" onClick={handleClose}>
+            ביטול
+          </Button>
+        </Box>
       </Dialog>
       <Snackbar
         open={alert.open}
         autoHideDuration={6000}
         onClose={handleCloseAlert}
       >
-        <Alert variant="filled" sx={{ width: "80%" }} onClose={handleCloseAlert} severity={alert.severity}>
+        <Alert
+          variant="filled"
+          sx={{ width: "80%" }}
+          onClose={handleCloseAlert}
+          severity={alert.severity}
+        >
           {alert.message}
         </Alert>
       </Snackbar>

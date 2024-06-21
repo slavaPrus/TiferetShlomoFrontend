@@ -86,16 +86,16 @@ export default function Flyers() {
     isSearch
       ? handleSearchFlyers(prevStr, currentPage + 1)
       : isFilter
-      ? handleFilterCategory(filterCategory, currentPage + 1)
-      : fetchData(fetchCurrentPage + 1);
+        ? handleFilterCategory(filterCategory, currentPage + 1)
+        : fetchData(fetchCurrentPage + 1);
   };
 
   const handlePrevPage = () => {
     isSearch
       ? handleSearchFlyers(prevStr, currentPage - 1)
       : isFilter
-      ? handleFilterCategory(filterCategory, currentPage - 1)
-      : fetchData(fetchCurrentPage - 1);
+        ? handleFilterCategory(filterCategory, currentPage - 1)
+        : fetchData(fetchCurrentPage - 1);
   };
 
   const handleFilterCategory = async (str, page) => {
@@ -154,10 +154,25 @@ export default function Flyers() {
           display="flex"
           flexDirection="row"
           justifyContent="space-between"
-          width="90%"
+          width={"80%"}
+          padding={"45px"}
         >
-          <FilterInput handleChange={handleFilterCategory} categories={categories} />
-          <SearchInput handleChange={handleSearchFlyers} />
+          <Box
+            display={"flex"}
+            flexDirection={"row"}
+            justifyContent={"space-between"}
+            width={"50%"}
+            gap={"10px"}
+          >
+            <FilterInput
+              handleChange={handleFilterCategory}
+              categories={categories}
+            />
+            <SearchInput handleChange={handleSearchFlyers} />
+          </Box>
+          <Typography variant="h4" color={"#0B1365"} fontWeight={"700"}>
+            עלוני פרשת שבוע
+          </Typography>
         </Box>
         {oneUser && oneUser.userType === 2 && (
           <Button onClick={handleClickAddFlyer}>
@@ -169,8 +184,13 @@ export default function Flyers() {
           container
           width="80%"
           flexWrap="wrap"
-          sx={{ p: "10px", justifyContent: "space-between", rowGap: "20px" }}
-        >
+          sx={{
+            border: "2px solid #e3e2e2",
+            borderRadius: "35px 35px 0 0",
+            p: "70px",
+            justifyContent: "space-between",
+            rowGap: "50px",
+          }}        >
           {flyers &&
             flyers.length > 0 &&
             flyers.map((flyer, index) => (
@@ -185,7 +205,9 @@ export default function Flyers() {
             ))}
         </Grid>
         <Button
-          disabled={isFilter || isSearch ? currentPage === 1 : fetchCurrentPage === 1}
+          disabled={
+            isFilter || isSearch ? currentPage === 1 : fetchCurrentPage === 1
+          }
           onClick={handlePrevPage}
         >
           הקודם
