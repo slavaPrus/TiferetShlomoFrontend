@@ -1,15 +1,30 @@
+import React, { useEffect, useState } from "react";
 import { Box, Button, Card, Grid, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { deleteFlyer } from "../utils/FlyerUtil";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
-// import DeleteIcon from "@mui/icons-material/DeleteIcon";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
-
-export const FlyerGrid = ({ flyer, index, setOpen, setSelectedFlyer,setIsNewFlyer }) => {
+export const FlyerGrid = ({ flyer, index, setOpen, setSelectedFlyer, setIsNewFlyer }) => {
   const oneUser = useSelector((state) => state.users.oneUser);
-  const { flyerName, pictureData,flyerUrl } = flyer;
+  const { flyerName, pictureData, flyerUrl } = flyer;
   const navigate = useNavigate();
+  const [pdfUrl, setPdfUrl] = useState("");
+
+  useEffect(() => {
+    const storage = getStorage();
+    const fileRef = ref(storage, 'Flyers/במדבר תשפד (1).pdf');
+
+    getDownloadURL(fileRef)
+      .then((url) => {
+        setPdfUrl(url);
+      })
+      .catch((error) => {
+        console.error("Error fetching the download URL:", error);
+      });
+  }, [flyerUrl]);
+
   const handleClick = () => {
     navigate("/flyer", { state: flyer });
   };
@@ -31,13 +46,7 @@ export const FlyerGrid = ({ flyer, index, setOpen, setSelectedFlyer,setIsNewFlye
   };
 
   return (
-    <Grid
-      item
-      display={"flex"}
-      flexDirection={"row"}
-      justifyContent={"center"}
-      rowGap={"15px"}
-    >
+    <Grid item display={"flex"} flexDirection={"row"} justifyContent={"center"} rowGap={"15px"}>
       <Card
         key={index}
         sx={{
@@ -45,10 +54,8 @@ export const FlyerGrid = ({ flyer, index, setOpen, setSelectedFlyer,setIsNewFlye
           width: "200px",
           p: "10px 40px",
           borderRadius: "10px",
-          gap: "",
           display: "flex",
           flexDirection: "column",
-
           "&:hover": {
             border: "1px solid #ccc",
             transform: "scale(1.2)",
@@ -57,9 +64,9 @@ export const FlyerGrid = ({ flyer, index, setOpen, setSelectedFlyer,setIsNewFlye
           },
         }}
       >
-        <img
+        <iframe
           onClick={handleClick}
-          src={flyerUrl??`data:image/jpeg;base64,${pictureData}`}
+          src={pdfUrl}
           alt={flyerName}
           style={{
             height: "100%",
@@ -74,7 +81,7 @@ export const FlyerGrid = ({ flyer, index, setOpen, setSelectedFlyer,setIsNewFlye
             justifyContent: "center",
             alignItem: "center",
           }}
-          >
+        >
           <Typography sx={{ textAlign: "center" }}>{flyerName}</Typography>
           {oneUser && oneUser.userType === 2 && (
             <>
@@ -82,7 +89,7 @@ export const FlyerGrid = ({ flyer, index, setOpen, setSelectedFlyer,setIsNewFlye
                 מחיקה
                 {/* <DeleteIcon /> */}
               </Button>
-              <Button onClick={handelClickEditFlyer} >
+              <Button onClick={handelClickEditFlyer}>
                 עריכה
                 <ModeEditIcon />
               </Button>
