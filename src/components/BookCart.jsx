@@ -8,7 +8,6 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 
 export const BookCart = ({ book, index, handleDeleteBookFromCart }) => {
-  const oneUser = useSelector((state) => state.users.oneUser);
   const { bookName, cost, pictureData, stock } = book;
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(book.quantity || 1);
@@ -57,7 +56,12 @@ export const BookCart = ({ book, index, handleDeleteBookFromCart }) => {
   };
 
   return (
-    <Grid container spacing={2} justifyContent="center" flexDirection={"column"}>
+    <Grid
+      container
+      spacing={2}
+      justifyContent="center"
+      flexDirection={"column"}
+    >
       <Grid width={"100%"} item xs={12}>
         <Card
           key={index}
@@ -80,7 +84,9 @@ export const BookCart = ({ book, index, handleDeleteBookFromCart }) => {
           <Box
             component="img"
             onClick={handleClick}
-            src={pictureData ? `data:image/jpeg;base64,${pictureData}` : bamidbar}
+            src={
+              pictureData ? `data:image/jpeg;base64,${pictureData}` : bamidbar
+            }
             sx={{
               height: 80,
               width: 80,
@@ -124,16 +130,24 @@ export const BookCart = ({ book, index, handleDeleteBookFromCart }) => {
                 mb: 1,
               }}
             >
-              <IconButton onClick={handleDecreaseQuantity} disabled={quantity <= 1}>
+              <IconButton
+                onClick={handleDecreaseQuantity}
+                disabled={quantity <= 1}
+              >
                 <RemoveIcon />
               </IconButton>
               <Typography sx={{ mx: 2 }}>{quantity}</Typography>
-              <IconButton onClick={handleIncreaseQuantity} disabled={!isInStock}>
+              <IconButton
+                onClick={handleIncreaseQuantity}
+                disabled={quantity >= stock || quantity < 1}
+              >
                 <AddIcon />
               </IconButton>
             </Box>
             {!isInStock && (
-              <Typography sx={{ color: "red", marginBottom: 1 }}>אזל המלאי</Typography>
+              <Typography sx={{ color: "red", marginBottom: 1 }}>
+                אזל המלאי
+              </Typography>
             )}
             <Button
               variant="contained"
