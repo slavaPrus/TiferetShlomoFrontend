@@ -1,120 +1,221 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Card, Grid, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { deleteFlyer } from "../utils/FlyerUtil";
-import ModeEditIcon from "@mui/icons-material/ModeEdit";
-import { getStorage, ref, listAll, getDownloadURL } from "firebase/storage";
+import FilterInput from "./FilterInput";
+import SearchInput from "./SearchInput";
+import { Link } from "react-router-dom";
+import { Box, Button, Grid, Typography } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { setFlyers } from "../features/flyerSlice";
+import FlyerGrid from "./FlyerGrid";
+import EditObjectAdmin from "./EditObjectAdmin";
+import AddIcon from "@mui/icons-material/Add";
+import {
+  getFlyersByPage,
+  getFilterFlyersByPage,
+  getSearchFlyersByPage,
+} from "../utils/FlyerUtil";
 
-export const FlyerGrid = ({ setOpen, setSelectedFlyer, setIsNewFlyer }) => {
+const emptyFlyer = {
+  FlyerName: "",
+  FlyerUrl: "",
+  ParashatShavua: "",
+};
+
+export default function Flyers() {
+  const [newFlyer, setNewFlyer] = useState(emptyFlyer);
+  const dispatch = useDispatch();
+  const [fetchCurrentPage, setFetchCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [prevStr, setPrevStr] = useState("");
+  const [isFilter, setIsFilter] = useState(false);
+  const [isSearch, setIsSearch] = useState(false);
+  const [filterCategory, setFilterCategory] = useState([]);
+  const [hasNext, setHasNext] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [selectedFlyer, setSelectedFlyer] = useState(null);
+  const [isNewFlyer, setIsNewFlyer] = useState(false);
   const oneUser = useSelector((state) => state.users.oneUser);
-  const navigate = useNavigate();
-  const [flyers, setFlyers] = useState([]);
+  const flyers = useSelector((state) => state.flyer.Flyers);
+  const categories = ["בראשית", "שמות", "ויקרא", "במדבר", "דברים"];
 
   useEffect(() => {
-    const fetchFlyers = async () => {
-      const storage = getStorage();
-      const listRef = ref(storage, 'Flyers');
-      try {
-        const res = await listAll(listRef);
-        const urls = await Promise.all(
-          res.items.map(async (itemRef) => {
-            const url = await getDownloadURL(itemRef);
-            return {
-              name: itemRef.name,
-              url: url,
-            };
-          })
-        );
-        setFlyers(urls);
-        
-      } catch (error) {
-        console.error("Error fetching flyers:", error);
-      }
-    };
-
-    fetchFlyers();
+    fetchData(fetchCurrentPage);
   }, []);
 
-  const handleClick = (flyer) => {
-    navigate("/flyer", { state: flyer });
-  };
-
-  const handelDeleteFlyer = async (flyerId) => {
+  const fetchData = async (page) => {
     try {
-      await deleteFlyer(flyerId).then((res) => {
-        alert("המחיקה בוצעה בהצלחה");
-        // עדכון הרשימה לאחר המחיקה
-        setFlyers((prevFlyers) => prevFlyers.filter(f => f.name !== flyerId));
-      });
+      const res = await getFlyersByPage(page);
+      const lastElementIsNull = res[res.length - 1] === null;
+      setHasNext(!lastElementIsNull);
+      if (lastElementIsNull) {
+        res.pop();
+      }
+      dispatch(setFlyers(res));
+      setFetchCurrentPage(page);
     } catch (error) {
-      alert(error);
+      console.error("Error fetching data:", error);
     }
   };
 
-  const handelClickEditFlyer = (flyer) => {
-    setSelectedFlyer(flyer);
-    setIsNewFlyer(false);
+  const handleSearchFlyers = async (s, page) => {
+    try {
+      if (s !== "") {
+        page = page || 1;
+        setIsSearch(true);
+        setIsFilter(false);
+        const res = await getSearchFlyersByPage(s, s === prevStr ? page : 1);
+        const lastElementIsNull = res[res.length - 1] === null;
+        setHasNext(!lastElementIsNull);
+        if (lastElementIsNull) {
+          res.pop();
+        }
+        setCurrentPage(page);
+        dispatch(setFlyers(res));
+        setPrevStr(s);
+      } else {
+        setPrevStr("");
+        setCurrentPage(1);
+        fetchData(1);
+        setIsSearch(false);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const handleNextPage = () => {
+    isSearch
+      ? handleSearchFlyers(prevStr, currentPage + 1)
+      : isFilter
+        ? handleFilterCategory(filterCategory, currentPage + 1)
+        : fetchData(fetchCurrentPage + 1);
+  };
+
+  const handlePrevPage = () => {
+    isSearch
+      ? handleSearchFlyers(prevStr, currentPage - 1)
+      : isFilter
+        ? handleFilterCategory(filterCategory, currentPage - 1)
+        : fetchData(fetchCurrentPage - 1);
+  };
+
+  const handleFilterCategory = async (str, page) => {
+    try {
+      if (str !== "הצג הכל") {
+        page = page || 1;
+        setIsSearch(false);
+        setIsFilter(true);
+        setCurrentPage(page);
+        const res = await getFilterFlyersByPage(
+          str,
+          filterCategory === str ? page : 1
+        );
+        const lastElementIsNull = res[res.length - 1] === null;
+        setHasNext(!lastElementIsNull);
+        if (lastElementIsNull) {
+          res.pop();
+        }
+        dispatch(setFlyers(res));
+        setFilterCategory(str);
+      } else {
+        setCurrentPage(1);
+        fetchData(1);
+        setIsFilter(false);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const handleClickAddFlyer = () => {
     setOpen(true);
+    setSelectedFlyer(newFlyer);
+    setIsNewFlyer(true);
   };
 
   return (
-    <Grid container spacing={2} justifyContent="center">
-      {flyers.map((flyer, index) => (
-        <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
-          <Card
-            sx={{
-              height: "300px",
-              width: "200px",
-              p: "10px 40px",
-              borderRadius: "10px",
-              display: "flex",
-              flexDirection: "column",
-              "&:hover": {
-                border: "1px solid #ccc",
-                transform: "scale(1.2)",
-                transition: "all 0.6s ease",
-                filter: "brightness(0.8)",
-              },
-            }}
+    <>
+      <EditObjectAdmin
+        open={open}
+        onClose={setOpen}
+        flyer={selectedFlyer}
+        objectData={selectedFlyer}
+        setObject={setSelectedFlyer}
+        setFlyer={setSelectedFlyer}
+        isNewFlyer={isNewFlyer}
+      />
+      <Box
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+        gap="10px"
+      >
+        <Box
+          display="flex"
+          flexDirection="row"
+          justifyContent="space-between"
+          width={"80%"}
+          padding={"45px"}
+        >
+          <Box
+            display={"flex"}
+            flexDirection={"row"}
+            justifyContent={"space-between"}
+            width={"50%"}
+            gap={"10px"}
           >
-            <iframe
-              onClick={() => handleClick(flyer)}
-              src={flyer.url}
-              title={flyer.name}
-              style={{
-                height: "100%",
-                width: "100%",
-                objectFit: "cover",
-              }}
+            <FilterInput
+              handleChange={handleFilterCategory}
+              categories={categories}
             />
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItem: "center",
-              }}
-            >
-              <Typography sx={{ textAlign: "center" }}>{flyer.name}</Typography>
-              {oneUser && oneUser.userType === 2 && (
-                <>
-                  <Button onClick={() => handelDeleteFlyer(flyer.name)}>
-                    מחיקה
-                    {/* <DeleteIcon /> */}
-                  </Button>
-                  <Button onClick={() => handelClickEditFlyer(flyer)}>
-                    עריכה
-                    <ModeEditIcon />
-                  </Button>
-                </>
-              )}
-            </Box>
-          </Card>
+            <SearchInput handleChange={handleSearchFlyers} />
+          </Box>
+          <Typography variant="h4" color={"#0B1365"} fontWeight={"700"}>
+            עלוני פרשת שבוע
+          </Typography>
+        </Box>
+        {oneUser && oneUser.userType === 2 && (
+          <Button onClick={handleClickAddFlyer}>
+            הוספת עלון
+            <AddIcon />
+          </Button>
+        )}
+        <Grid
+          container
+          width="80%"
+          flexWrap="wrap"
+          sx={{
+            border: "2px solid #e3e2e2",
+            borderRadius: "35px 35px 0 0",
+            p: "70px",
+            justifyContent: "space-between",
+            rowGap: "50px",
+          }}        >
+          {flyers &&
+            flyers.length > 0 &&
+            flyers.map((flyer, index) => (
+              <FlyerGrid
+                index={index}
+                flyer={flyer}
+                key={index}
+                setOpen={setOpen}
+                setSelectedFlyer={setSelectedFlyer}
+                setIsNewFlyer={setIsNewFlyer}
+              />
+            ))}
         </Grid>
-      ))}
-    </Grid>
+        <Button
+          disabled={
+            isFilter || isSearch ? currentPage === 1 : fetchCurrentPage === 1
+          }
+          onClick={handlePrevPage}
+        >
+          הקודם
+        </Button>
+        <Button disabled={!hasNext} onClick={handleNextPage}>
+          הבא
+        </Button>
+      </Box>
+    </>
   );
-};
-
-export default FlyerGrid;
+}

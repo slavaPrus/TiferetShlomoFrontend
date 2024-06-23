@@ -27,38 +27,46 @@ export const BookGrid = ({
   setAlert,
 }) => {
   const oneUser = useSelector((state) => state.users.oneUser);
+  const [cartItems, setCartItems] = useState(() => {
+    const cartLocal = localStorage.getItem("cartItems");
+    return JSON.parse(cartLocal) || [];
+  });
   const { bookId, bookName, bookUrl, cost, pictureData, stock } = book;
   const navigate = useNavigate();
-  const handleClick = () => {
-    navigate("/one-book", { state: book, handleAddCart });
-  };
-  const getInitialQuantity = () => {
-    let cartLocal = localStorage.getItem("cartItems");
-    let cartItems = cartLocal ? JSON.parse(cartLocal) : [];
-    const existingItem = cartItems.find((item) => item.bookId === bookId);
-    return existingItem ? existingItem.quantity : 0;
-  };
-  const [isInStock, setIsInStock] = useState(stock > 0);
-  const [quantity, setQuantity] = useState(
-    book.quantity > 0 ? book.quantity : 0
-  );
 
-  useEffect(() => {
-    setQuantity(getInitialQuantity());
-  }, [bookId]);
+  const handleClick = () => {
+    navigate("/one-book", { state: book });
+  };
+
+  const [isInStock] = useState(stock > 0);
+  const [quantity, setQuantity] = useState(
+    cartItems.find((item) => item.bookId === bookId) || 0
+  );
 
   const handleDeleteBook = async () => {
     try {
       const res = await deleteBook(book.bookId);
       if (res.status === 200) {
-        setAlert(<Alert variant="filled" sx={{width:"80%"}} severity="success"> המחיקה בוצעה בהצלחה </Alert>);
+        setAlert(
+          <Alert variant="filled" sx={{ width: "80%" }} severity="success">
+            המחיקה בוצעה בהצלחה
+          </Alert>
+        );
         setTimeout(() => setAlert(null), 9000);
       } else {
-        setAlert(<Alert variant="filled" sx={{width:"80%"}} severity="error">ארעה שגיאה במהלך המחיקה </Alert>);
+        setAlert(
+          <Alert variant="filled" sx={{ width: "80%" }} severity="error">
+            ארעה שגיאה במהלך המחיקה
+          </Alert>
+        );
         setTimeout(() => setAlert(null), 9000);
       }
     } catch (error) {
-      setAlert(<Alert variant="filled" sx={{width:"80%"}} severity="error"> ארעה שגיאה </Alert>);
+      setAlert(
+        <Alert variant="filled" sx={{ width: "80%" }} severity="error">
+          ארעה שגיאה
+        </Alert>
+      );
       setTimeout(() => setAlert(null), 9000);
     }
   };
@@ -70,54 +78,75 @@ export const BookGrid = ({
   };
 
   const handleAddCart = (book) => {
-    let cartLocal = localStorage.getItem("cartItems");
-    let cartItems = cartLocal == null ? [] : JSON.parse(cartLocal);
-    const existingItem = cartItems.find((item) => item.bookId === book.bookId);
-
-    if (existingItem) {
-      existingItem.quantity += 1;
-    } else {
-      cartItems.push({ ...book, quantity: 1 });
+    try {
+      const existingItem = cartItems.find(
+        (item) => item.bookId === book.bookId
+      );
+      if (existingItem) {
+        existingItem.quantity += 1;
+        existingItem.pictureData = "";
+      } else {
+        setCartItems((prev) => [
+          ...prev,
+          { ...book, quantity: 1, pictureData: "" },
+        ]);
+      }
+      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+      setAlert(
+        <Alert variant="filled" sx={{ width: "80%" }} severity="success">
+          הספר נוסף לעגלה
+        </Alert>
+      );
+      setTimeout(() => setAlert(null), 9000);
+    } catch (error) {
+      setAlert(
+        <Alert variant="filled" sx={{ width: "80%" }} severity="error">
+          ארעה שגיאה בהוספת הספר,
+          {error}
+        </Alert>
+      );
     }
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
-    setQuantity((prevQuantity) => prevQuantity + 1);
-    setAlert(<Alert variant="filled" sx={{width:"80%"}} severity="success">הספר נוסף לעגלה</Alert>);
-    setTimeout(() => setAlert(null), 9000);
-  };
-
-  const handleIncreaseQuantity = () => {
-    setQuantity((prevQuantity) => {
-      const newQuantity = prevQuantity + 1;
-      updateCartQuantity(book.bookId, newQuantity);
-      setAlert(<Alert variant="filled" sx={{width:"80%"}} severity="success">הספר נוסף לעגלה</Alert>);
-      setTimeout(() => setAlert(null), 99999);
-      return newQuantity;
-    });
   };
 
   const handleDecreaseQuantity = () => {
-    if (quantity > 0) {
-      setQuantity((prevQuantity) => {
-        const newQuantity = prevQuantity - 1;
-        updateCartQuantity(book.bookId, newQuantity);
-        setAlert(<Alert variant="filled" sx={{width:"80%"}} severity="success"> המחיקה בוצעה בהצלחה </Alert>);
+    if (quantity === 1) {
+      // מחיקת הספר מהעגלה כאשר הכמות מגיעה ל-1
+      try {
+        const updateItems = cartItems.filter((item) => item.bookId !== bookId);
+        setCartItems(updateItems);
+
+        localStorage.setItem("cartItems", JSON.stringify(updateItems));
+
+        setAlert(
+          <Alert variant="filled" sx={{ width: "80%" }} severity="success">
+            הספר הוסר מהעגלה בהצלחה
+          </Alert>
+        );
         setTimeout(() => setAlert(null), 9000);
-        return newQuantity;
+      } catch (error) {
+        setAlert(
+          <Alert variant="filled" sx={{ width: "80%" }} severity="error">
+            ארעה שגיאה במחיקת הספר: {error.message}
+          </Alert>
+        );
+        setTimeout(() => setAlert(null), 9000);
+      }
+    } else if (quantity > 1) {
+      const updateItems = cartItems.map((item) => {
+        if (item.bookId !== bookId) return book;
+        return {
+         ...book,
+         quantity: item.quantity - 1
+        }
       });
-    }
-  };
+      setCartItems(updateItems);
 
-  const updateCartQuantity = (bookId, newQuantity) => {
-    let cartLocal = localStorage.getItem("cartItems");
-    let cartItems = cartLocal ? JSON.parse(cartLocal) : [];
-
-    const itemIndex = cartItems.findIndex((item) => item.bookId === bookId);
-
-    if (itemIndex !== -1) {
-      cartItems[itemIndex].quantity = newQuantity;
-      localStorage.setItem("cartItems", JSON.stringify(cartItems));
-    } else {
-      console.error("Item not found in cart");
+      setAlert(
+        <Alert variant="filled" sx={{ width: "80%" }} severity="success">
+          כמות הספר עודכנה בהצלחה
+        </Alert>
+      );
+      setTimeout(() => setAlert(null), 9000);
     }
   };
 
@@ -150,7 +179,9 @@ export const BookGrid = ({
           <img
             onClick={handleClick}
             src={
-              pictureData ? `data:image/jpeg;base64,${pictureData}` :bookUrl?? bamidbar
+              pictureData
+                ? `data:image/jpeg;base64,${pictureData}`
+                : bookUrl ?? bamidbar
             }
             style={{
               height: "100%",
@@ -182,7 +213,29 @@ export const BookGrid = ({
               אזל המלאי
             </Typography>
           )}
-          {quantity !== 0 && (
+          
+          {oneUser?.userType === 2 ? (
+            <Box
+              display={"flex"}
+              flexDirection={"row"}
+              justifyContent={"space-around"}
+            >
+              <>
+                <Button onClick={() => handleDeleteBook()}>
+                  מחיקה
+                  <DeleteIcon />
+                </Button>
+                <Button onClick={() => handleClickEditBook()}>
+                  עריכה
+                  <ModeEditIcon />
+                </Button>
+              </>
+            </Box>
+          ) : quantity === 0 ? (
+            <Button disabled={!isInStock} onClick={() => handleAddCart(book)}>
+              הוסף לעגלה <ShoppingCartIcon />
+            </Button>
+          ) : (
             <Box
               sx={{
                 display: "flex",
@@ -192,41 +245,19 @@ export const BookGrid = ({
               }}
             >
               <IconButton
-                onClick={handleDecreaseQuantity}
+                onClick={() => handleDecreaseQuantity()}
                 disabled={quantity < 1}
               >
                 <RemoveIcon />
               </IconButton>
               <Typography sx={{ mx: 2 }}>{quantity}</Typography>
               <IconButton
-                onClick={handleIncreaseQuantity}
+                onClick={() => handleAddCart(book)}
                 disabled={quantity >= stock || quantity < 1}
               >
                 <AddIcon />
               </IconButton>
             </Box>
-          )}
-          {oneUser && oneUser.userType === 2 ?  (
-            <Box
-              display={"flex"}
-              flexDirection={"row"}
-              justifyContent={"space-around"}
-            >
-              <>
-                <Button onClick={handleDeleteBook}>
-                  מחיקה
-                  <DeleteIcon />
-                </Button>
-                <Button onClick={handleClickEditBook}>
-                  עריכה
-                  <ModeEditIcon />
-                </Button>
-              </>
-            </Box>
-          ):(
-            <Button disabled={!isInStock} onClick={() => handleAddCart(book)}>
-              הוסף לעגלה <ShoppingCartIcon />
-            </Button>
           )}
         </Card>
       </Grid>

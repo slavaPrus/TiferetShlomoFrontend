@@ -48,10 +48,10 @@ export default function OneBook() {
         >
           {cost} ₪
         </Typography>
-        <Button variant="contained" onClick={handleAddCart(book)}>
+        {/* <Button variant="contained" onClick={handleAddCart(book)}>
           הוסף לעגלה
           <ShoppingCartIcon />
-        </Button>
+        </Button> */}
       </Box>
       <img src={bamidbar} height={"600px"} />
     </Box>

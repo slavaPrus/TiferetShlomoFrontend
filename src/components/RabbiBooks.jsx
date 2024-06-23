@@ -38,7 +38,7 @@ export default function RabbiBooks() {
     Cost: 0,
     Stock: 0,
   };
-  const [newBook, setNewBook] = useState(emptyBook);
+  const [newBook] = useState(emptyBook);
   const [isNewBook, setIsNewBook] = useState(false);
   useEffect(() => {
     if (!open) {
@@ -149,7 +149,6 @@ export default function RabbiBooks() {
 
   return (
     <>
-      {
         <EditObjectAdmin
           open={open}
           onClose={setOpen}
@@ -158,7 +157,6 @@ export default function RabbiBooks() {
           setObject={setSelectedBook}
           isNewObject={isNewBook}
         />
-      }
       <Box
         display={"flex"}
         flexDirection={"column"}
@@ -250,6 +248,6 @@ export default function RabbiBooks() {
           הבא
         </Button>
       </Box>
-    </>
+    </> 
   );
 }
