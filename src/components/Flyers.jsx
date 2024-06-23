@@ -27,6 +27,7 @@ export const FlyerGrid = ({ setOpen, setSelectedFlyer, setIsNewFlyer }) => {
           })
         );
         setFlyers(urls);
+        
       } catch (error) {
         console.error("Error fetching flyers:", error);
       }
