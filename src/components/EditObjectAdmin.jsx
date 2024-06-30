@@ -46,7 +46,7 @@ const EditObjectAdmin = (props) => {
     const value = event.target.value;
     const name = event.target.name;
 
-    if (name === "pictureData" && event.target.files[0]) {
+    if (name === "bookUrl" && event.target.files[0]) {
       setImage(event.target.files[0]);
       const imageUrl = await uploadImage(event.target.files[0]);
       setObject((prevObject) => ({
@@ -111,8 +111,7 @@ const EditObjectAdmin = (props) => {
         onClose={handleClose}
         open={open}
         PaperProps={{
-          sx: {
-            paddingTop: "50px",
+          sx: { padding: "30px"
           },
         }}
       >
@@ -123,8 +122,6 @@ const EditObjectAdmin = (props) => {
           container
           sx={{
             justifyContent: "center",
-            margin: "20px",
-            padding: "20px",
             gap: "10px",
           }}
         >
@@ -133,7 +130,7 @@ const EditObjectAdmin = (props) => {
               <Grid item xs={3} key={index}>
                 <TextField
                   type={objectField.includes("Url") ? "file" : "text"}
-                  label={objectField.includes("Url") ? objectField : ""}
+                  label={objectField.includes("Url") ? "" : objectField}
                   variant="outlined"
                   fullWidth
                   margin="normal"

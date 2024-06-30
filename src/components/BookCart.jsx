@@ -1,14 +1,13 @@
 import { Box, Button, Card, Grid, IconButton, Typography } from "@mui/material";
 import bamidbar from "../pictures/bamidbar.png";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 
 export const BookCart = ({ book, index, handleDeleteBookFromCart }) => {
-  const { bookName, cost, pictureData, stock } = book;
+  const { bookName, cost,stock } = book;
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(book.quantity || 1);
   const [isInStock, setIsInStock] = useState(stock > 0);
@@ -85,7 +84,7 @@ export const BookCart = ({ book, index, handleDeleteBookFromCart }) => {
             component="img"
             onClick={handleClick}
             src={
-              pictureData ? `data:image/jpeg;base64,${pictureData}` : bamidbar
+             bamidbar
             }
             sx={{
               height: 80,

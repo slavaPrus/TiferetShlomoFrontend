@@ -2,13 +2,19 @@ import { Box, Button, Typography } from "@mui/material";
 import React from "react";
 import bamidbar from "../pictures/bamidbar.png";
 import { Link, useLocation } from "react-router-dom";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import BookAction from "./BookAction";
 
 export default function OneBook() {
   const location = useLocation();
-  const { state: { handleAddCart } } = location;
-  const { state: book } = location;
+  const { state: book } = location || {};
+  
+  // Ensure book object exists and has the expected properties
+  if (!book || !book.bookName || !book.describe || !book.bookUrl || !book.cost) {
+    return <Typography>Invalid book data</Typography>;
+  }
+
   const { bookName, cost, describe, img, bookUrl } = book;
+  
   const handleWatchBook = () => {
     window.open(bookUrl, "_blank");
   };
@@ -48,12 +54,9 @@ export default function OneBook() {
         >
           {cost} ₪
         </Typography>
-        {/* <Button variant="contained" onClick={handleAddCart(book)}>
-          הוסף לעגלה
-          <ShoppingCartIcon />
-        </Button> */}
+        {/* <BookAction book={book} setAlert={setAlert}/> */}
       </Box>
-      <img src={bamidbar} height={"600px"} />
+      <img src={bamidbar} height={"600px"} alt={bookName} />
     </Box>
   );
 }
