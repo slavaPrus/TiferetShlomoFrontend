@@ -46,12 +46,12 @@ const EditObjectAdmin = (props) => {
     const value = event.target.value;
     const name = event.target.name;
 
-    if (name === "pictureData" && event.target.files[0]) {
+    if (name === "bookUrl" && event.target.files[0]) {
       setImage(event.target.files[0]);
       const imageUrl = await uploadImage(event.target.files[0]);
       setObject((prevObject) => ({
         ...prevObject,
-        imageUrl,
+        [name]: imageUrl,
       }));
     } else {
       setObject((prevObject) => ({
@@ -87,17 +87,20 @@ const EditObjectAdmin = (props) => {
   };
 
   const uploadImage = async (imageFile) => {
-    const storageRef = ref(storage, `images/${imageFile.name}`);
+    const imageUrl = `images/${imageFile.name}`;
+    console.log("**********************File*************", imageFile);
+    console.log("***********************************", imageUrl);
+    const storageRef = ref(storage, imageUrl);
     await uploadBytes(storageRef, imageFile);
-    const imageUrl = await getDownloadURL(storageRef);
-    await axios
-      .post("/api/save-image-url", { url: imageUrl })
-      .then((response) => {
-        console.log("Image URL saved successfully:", response);
-      })
-      .catch((error) => {
-        console.error("Error saving image URL:", error);
-      });
+    // const imageUrl = await getDownloadURL(storageRef);
+    // await axios
+    //   .post("/api/save-image-url", { url: imageUrl })
+    //   .then((response) => {
+    //     console.log("Image URL saved successfully:", response);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error saving image URL:", error);
+    //   });
     return imageUrl;
   };
 
@@ -185,3 +188,4 @@ const EditObjectAdmin = (props) => {
 };
 
 export default EditObjectAdmin;
+

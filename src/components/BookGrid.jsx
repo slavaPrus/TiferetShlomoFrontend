@@ -17,6 +17,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { useEffect, useState } from "react";
+import ImageView from "./ImageView";
 
 export const BookGrid = ({
   book,
@@ -179,9 +180,10 @@ export const BookGrid = ({
           <img
             onClick={handleClick}
             src={
-              pictureData
-                ? `data:image/jpeg;base64,${pictureData}`
-                : bookUrl ?? bamidbar
+              // pictureData
+              //   ? `data:image/jpeg;base64,${pictureData}`
+                // : bookUrl ?? bamidbar
+                bamidbar
             }
             style={{
               height: "100%",
@@ -189,6 +191,7 @@ export const BookGrid = ({
               objectFit: "cover",
             }}
           />
+          {/* <ImageView imageUrl={bookUrl}/> */}
           <Box
             sx={{
               display: "flex",

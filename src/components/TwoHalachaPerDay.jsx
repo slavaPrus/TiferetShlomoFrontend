@@ -29,9 +29,9 @@ const hebrewMonths = {
 // פונקציה להמרת מספר לגימטריה
 const numberToGematria = (number) => {
   const letters = [
-    '', 'א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט',
-    'י', 'יא', 'יב', 'יג', 'יד', 'ט"ו', 'ט"ז', 'י"ז', 'יח', 'יט',
-    'כ', 'כא', 'כב', 'כג', 'כד', 'כה', 'כו', 'כז', 'כח', 'כט',
+    '', "א'", 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט',
+    'י', 'י"א', 'י"ב', 'י"ג', 'י"ד', 'ט"ו', 'ט"ז', 'י"ז', 'י"ח', 'יט',
+    "כ'", 'כ"א', 'כ"ב', 'כ"ג', 'כ"ד', 'כ"ה', 'כ"ו', 'כ"ז', 'כ"ח', 'כ"ט',
     'ל', 
   ];
 
@@ -62,6 +62,7 @@ const TwoHalachaPerDay = () => {
 
     const fetchPDF = async () => {
       try {
+        debugger;
         console.log("Attempting to load PDF from URL:", url);
         const pdf = await getDocument(url).promise;
         console.log("PDF loaded", pdf);

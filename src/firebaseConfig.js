@@ -17,12 +17,12 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const storage = getStorage(app);
+const storage = getStorage(app)
  
-  // Check if Firebase app is already initialized
-  if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-  }
+// Check if Firebase app is already initialized
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
  
 function PDFViewer() {
     const storage = firebase.storage();
@@ -48,5 +48,5 @@ function PDFViewer() {
     }
 
 export default PDFViewer;
-export { storage };
+export { storage, firebaseConfig };
 
