@@ -1,3 +1,4 @@
+import { CandleLightingEvent } from "@hebcal/core";
 import { deleteBook } from "../utils/BookUtil";
 
 export const handleDeleteBook = async (book, setAlert) => {
@@ -39,6 +40,7 @@ export const handleDeleteBook = async (book, setAlert) => {
 };
 
 export const handleAddCart = (book, setAlert, cartItems, setCartItems) => {
+  console.log('book',book)
   try {
     debugger
     const existingItem = cartItems.find((item) => item.bookId === book.bookId);

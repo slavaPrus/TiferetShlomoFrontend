@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { deleteFlyer } from "../utils/FlyerUtil";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import PdfView from "./PdfView";
 
 export const FlyerGrid = ({ flyer, index, setOpen, setSelectedFlyer, setIsNewFlyer }) => {
   const oneUser = useSelector((state) => state.users.oneUser);
@@ -26,7 +27,7 @@ export const FlyerGrid = ({ flyer, index, setOpen, setSelectedFlyer, setIsNewFly
   }, [flyerUrl]);
 
   const handleClick = () => {
-    navigate("/flyer", { state: flyer });
+    navigate("/one-flyer", { state: { flyer } });
   };
 
   const handelDeleteFlyer = async () => {
@@ -64,16 +65,36 @@ export const FlyerGrid = ({ flyer, index, setOpen, setSelectedFlyer, setIsNewFly
           },
         }}
       >
-        <iframe
-          onClick={handleClick}
-          src={pdfUrl}
-          alt={flyerName}
+        <div
           style={{
             height: "100%",
             width: "100%",
-            objectFit: "cover",
+            overflow: "hidden",
           }}
-        />
+          onClick={(e) => e.stopPropagation()} /* ניטרול האירועים הנוספים שנוצרים על ידי הקלף */
+        >
+          {/* <img
+            onClick={handleClick}
+            src={pdfUrl}
+            alt={flyerName}
+            style={{
+              height: "100%",
+              width: "100%",
+              objectFit: "cover",
+            }}
+          /> */}
+          <PdfView
+            pdfUrl={pdfUrl == null ? "": pdfUrl}
+            // onClick={handleClick}
+            // src={pdfUrl}
+            // alt={flyerName}
+            // style={{
+            //   height: "100%",
+            //   width: "100%",
+            //   objectFit: "cover",
+            // }}
+          />
+        </div>
         <Box
           sx={{
             display: "flex",

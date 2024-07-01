@@ -9,7 +9,7 @@ export default function OneBook() {
   const { state: book } = location || {};
   
   // Ensure book object exists and has the expected properties
-  if (!book || !book.bookName || !book.describe || !book.bookUrl || !book.cost) {
+  if (!book ) {
     return <Typography>Invalid book data</Typography>;
   }
 

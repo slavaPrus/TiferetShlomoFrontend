@@ -99,7 +99,8 @@ const TwoHalachaPerDay = () => {
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <Typography variant="h6">התאריך העברי של היום: {hebrewDateString}</Typography>
+      <br></br>
+      <Typography variant="h6" sx= {{fontSize: '25px',fontWeight: 'bold'}}>התאריך העברי של היום: {hebrewDateString}</Typography>
       {pageNumber ? (
         <iframe
           src={`${url}#page=${pageNumber}`}

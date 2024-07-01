@@ -12,9 +12,18 @@ import {
 import * as BookUtil from "../utils/BookUtil";
 import * as FlyerUtil from "../utils/FlyerUtil";
 import * as LessonUtil from "../utils/LessonUtil";
-import { storage } from "../firebaseConfig";
+import { firebaseConfig } from "../firebaseConfig";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import axios from "axios";
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/storage';
+
+import { useUploadFile } from "react-firebase-hooks/storage";
+
+// Check if Firebase app is already initialized
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
 
 const EditObjectAdmin = (props) => {
   const { onClose, open, objectType, objectData, setObject, isNewObject } =
@@ -34,6 +43,9 @@ const EditObjectAdmin = (props) => {
 
   const selectedUtil = utilMap[objectType];
 
+  const storage = firebase.storage();
+  const storageRef = storage.ref();
+  
   useEffect(() => {
     console.log(objectData);
   }, [objectData]);
@@ -90,8 +102,16 @@ const EditObjectAdmin = (props) => {
     const imageUrl = `images/${imageFile.name}`;
     console.log("**********************File*************", imageFile);
     console.log("***********************************", imageUrl);
-    const storageRef = ref(storage, imageUrl);
-    await uploadBytes(storageRef, imageFile);
+    const imagesRef = storageRef.child(imageUrl);
+
+    imagesRef.put(imageFile).then(() => {
+        console.log('Image uploaded successfully');
+        // imagesRef.getDownloadURL().then((url) => {
+        //     image
+        // });
+    });
+    // const storageRef = ref(storage, imageUrl);
+    // await uploadBytes(storageRef, imageFile);
     // const imageUrl = await getDownloadURL(storageRef);
     // await axios
     //   .post("/api/save-image-url", { url: imageUrl })

@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Box, Button, Grid, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Dialog, DialogTitle, Grid, Snackbar, TextField, Typography } from "@mui/material";
 import BookCart from "./BookCart";
 
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [alert, setAlert] = useState(null);
+  const [alert, setAlert] = useState({ open: false, severity: "", message: "" });
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
 
   useEffect(() => {
     const cartLocal = localStorage.getItem("cartItems");
@@ -50,8 +53,25 @@ export default function Cart() {
     setCartItems(updatedCartItems);
     localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
 
-    setAlert(<Alert variant="filled" sx={{width:"80%"}} severity="success">הספר נמחק מהעגלה</Alert>);
+    setAlert(<Alert variant="filled" sx={{ width: "80%" }} severity="success">הספר נמחק מהעגלה</Alert>);
     setTimeout(() => setAlert(null), 3000); // Clear the alert after 3 seconds
+  };
+
+  const handleConfirm = () => {
+    setAlert({ open: true, severity: "success", message: `${name}, הזמנתך התקבלה.ניצור קשר בהקדם לסיום התהליך בטלפון ${phone}.` });
+
+
+
+
+
+
+
+
+
+    setOpen(false);
+  };
+  const handleCloseAlert = () => {
+    setAlert({ open: false, severity: "", message: "" });
   };
 
   return (
@@ -62,7 +82,46 @@ export default function Cart() {
       alignItems={"center"}
       gap={"10px"}
     >
-      {alert && <Box width="80%">{alert}</Box>}
+      <Snackbar
+        open={alert.open}
+        autoHideDuration={6000}
+        onClose={handleCloseAlert}
+      >
+        <Alert
+          variant="filled"
+          sx={{ width: "80%" }}
+          onClose={handleCloseAlert}
+          severity={alert.severity}
+        >
+          {alert.message}
+        </Alert>
+      </Snackbar>      
+      <Dialog
+        open={open}
+        PaperProps={{
+          sx: { padding: "30px", dir: 'rtl' },
+        }}
+      >
+        <DialogTitle sx={{ display: 'flex', justifyContent: 'center', fontWeight: '600' }}>
+          להשלמת ההזמנה הכנס את הפרטים הבאים
+        </DialogTitle>
+        <Box sx={{ display: 'flex', padding: '20px', gap: '10px' }}>
+          <TextField
+            id="name"
+            label="שם מלא"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <TextField
+            id="phone"
+            label="טלפון ליצירת קשר"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+        </Box>
+        <Button onClick={handleConfirm}>אישור</Button>
+        <Button onClick={() => setOpen(false)}>ביטול</Button>
+      </Dialog>
       <Box
         display={"flex"}
         flexDirection={"row"}
@@ -79,6 +138,7 @@ export default function Cart() {
         >
           <Box sx={container}>
             <Button
+              onClick={() => { setOpen(true) }}
               sx={{
                 display: "flex",
                 width: "100%",

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import BookAction from "./BookAction";
 import AdminBookAction from "./AdminBookAction";
+import ImageView from "./ImageView";
 
 export const BookGrid = ({
   book,
@@ -16,11 +17,11 @@ export const BookGrid = ({
   const userType = useSelector((state) => state.users.oneUser)?.userType;
 
   const { bookName, bookUrl, cost } = book;
-  console.log("bookgrid",book)
+  console.log("bookgrid", book)
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate("/one-book", { state: { book, setAlert } });
+    navigate("/one-book", { state: { book } });
   };
 
   const handleClickEditBook = () => {
@@ -54,28 +55,27 @@ export const BookGrid = ({
           },
         }}
       >
-        <img
+        {/* <img
           onClick={handleClick}
-          src={bookUrl || bamidbar}
+          src={ bamidbar}
           alt={bookName}
           style={{
             height: "100%",
             width: "100%",
             objectFit: "cover",
-            cursor: "pointer",
           }}
-        />
+        /> */}
+        <ImageView imageUrl={(bookUrl == null || bookUrl == "") ? "images/זאת אמונתי.JPG" : bookUrl} name={bookName} handleClick={handleClick}/>
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            alignItems: "center",
+            alignItem: "center",
           }}
+        >  <Typography
+          sx={{ textAlign: "center", fontWeight: "600", color: "#0B1365" }}
         >
-          <Typography
-            sx={{ textAlign: "center", fontWeight: "600", color: "#0B1365" }}
-          >
             {bookName}
           </Typography>
           <Typography

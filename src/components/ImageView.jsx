@@ -1,8 +1,8 @@
-import React from "react" ;
+import React, { useEffect, useState } from "react" ;
 import 'firebase/compat/storage';
 import firebase from 'firebase/compat/app';
 import { useDownloadURL } from 'react-firebase-hooks/storage';
-import { firebaseConfig, storage } from "../firebaseConfig";
+import { firebaseConfig } from "../firebaseConfig";
 
 // const app = initializeApp(firebaseConfig);
 // const storage = getStorage(app)
@@ -12,22 +12,52 @@ if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
-const ImageView = ({imageUrl}) => {
-    const storage = firebase.storage();
-    const storageRef = storage.ref();
-    const imageRef = storageRef.child(imageUrl == null ? "" : imageUrl);
+const storageRef = firebase.storage().ref();
 
-    const [url, loading, error] = useDownloadURL(imageRef);
 
-    if(error){
-        return <span>ארעה שגיאה</span>;
-    }
+const ImageView = ({imageUrl, name, handleClick}) => {
+    // const storage = firebase.storage();
+    // const storageRef = storage.ref();
 
-    if(loading){
-        return <span>טוען...</span>;
-    }
+    // const url = storageRef.child(imageUrl == null ? "" : imageUrl).getDownloadURL();
+
+    const [image, setImage] = useState('');
+    //  const { url } = useStorage(firebase.storage().ref().child(imageUrl));
+
+
+    useEffect(() => {
+      getImageUrl(imageUrl)
+        .then((url) => setImage(url))
+        .catch((error) => console.error(error));
+    }, []);
+
+    const getImageUrl = async (imagePath) => {
+        const imageUrl = await storageRef.child(imagePath).getDownloadURL();
+        return imageUrl;
+    };
+  
+    // const [url, loading, error] = useDownloadURL(imageRef);
+
+    // if(error){
+    //     return <span>ארעה שגיאה</span>;
+    // }
+
+    // if(loading){
+    //     return <span>טוען...</span>;
+    // }
     return(<>
-    <img src={url} />
+    {imageUrl ? (
+        <img src={image}
+        alt={name} 
+        onClick={handleClick}
+        style={{
+          height: "100%",
+          width: "100%",
+          objectFit: "cover",
+        }}/>
+      ) : (
+        <p>Loading image...</p>
+      )}
     </>);
 }
 
