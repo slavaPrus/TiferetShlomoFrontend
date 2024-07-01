@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import FilterInput from "./FilterInput";
 import SearchInput from "./SearchInput";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Alert, Box, Button, Grid, Snackbar, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getBooksByPage,
@@ -15,8 +15,8 @@ import AddIcon from "@mui/icons-material/Add";
 
 export default function RabbiBooks() {
   const dispatch = useDispatch();
-  const [alert, setAlert] = useState(null);
-  const [FetchCurrentPage, setFetchCurrentPage] = useState(1);
+  const [alert, setAlert] = useState({ open: false, severity: "", message: "" });
+  const [fetchCurrentPage, setFetchCurrentPage] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [prevStr, setPrevStr] = useState("");
   const [isFilter, setIsFilter] = useState(false);
@@ -29,56 +29,51 @@ export default function RabbiBooks() {
   const categories = ["הצג הכל", "הלכה", "מוסר", "אמונה וביטחון"];
 
   const emptyBook = {
-    BookName: "",
-    Describe: "",
-    Part: 1,
-    BookUrl: "",
-    PictureData: "",
-    Category: "",
-    Cost: 0,
-    Stock: 0,
+    bookName: "",
+    describe: "",
+    part: 1,
+    bookUrl: "",
+    category: "",
+    cost: 0,
+    pictureData: "",
+    stock: 0,
   };
   const [newBook] = useState(emptyBook);
   const [isNewBook, setIsNewBook] = useState(false);
+
   useEffect(() => {
     if (!open) {
-      fetchData(FetchCurrentPage);
+      fetchData(fetchCurrentPage);
     }
   }, [open]);
 
   const fetchData = async (page) => {
     try {
       const res = await getBooksByPage(page);
-      // Check if the last element is null
+      console.log("res",res)
       const lastElementIsNull = res[res.length - 1] === null;
-      // Update hasNext flag
       setHasNext(!lastElementIsNull);
-      // Remove the null element if present
       if (lastElementIsNull) {
         res.pop();
       }
-      // Dispatch the books
       dispatch(setBooks(res));
-      // Update current page
       setFetchCurrentPage(page);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-  const books = useSelector((state) => state.book.Books);
+  const books = useSelector((state) => state.book.books);
 
   const handleSearchBooks = async (s, page) => {
     try {
       if (s !== "") {
         page = page || 1;
-        setIsSearch(true); // Set isSearch to true when searching
-        setIsFilter(false); // Set isFilter to false when searching
+        setIsSearch(true);
+        setIsFilter(false);
         const res = await getSearchBooksByPage(s, s === prevStr ? page : 1);
         const lastElementIsNull = res[res.length - 1] === null;
-        // Update hasNext flag
         setHasNext(!lastElementIsNull);
-        // Remove the null element if present
         if (lastElementIsNull) {
           res.pop();
         }
@@ -97,36 +92,38 @@ export default function RabbiBooks() {
   };
 
   const handleNextPage = () => {
-    isSearch
-      ? handleSearchBooks(prevStr, currentPage + 1)
-      : isFilter
-        ? handleFilterCategory(filterCategory, currentPage + 1)
-        : fetchData(FetchCurrentPage + 1);
+    if (isSearch) {
+      handleSearchBooks(prevStr, currentPage + 1);
+    } else if (isFilter) {
+      handleFilterCategory(filterCategory, currentPage + 1);
+    } else {
+      fetchData(fetchCurrentPage + 1);
+    }
   };
 
   const handlePrevPage = () => {
-    isSearch
-      ? handleSearchBooks(prevStr, currentPage - 1)
-      : isFilter
-        ? handleFilterCategory(filterCategory, currentPage - 1)
-        : fetchData(FetchCurrentPage - 1);
+    if (isSearch) {
+      handleSearchBooks(prevStr, currentPage - 1);
+    } else if (isFilter) {
+      handleFilterCategory(filterCategory, currentPage - 1);
+    } else {
+      fetchData(fetchCurrentPage - 1);
+    }
   };
 
   const handleFilterCategory = async (str, page) => {
     try {
       if (str !== "הצג הכל") {
         page = page || 1;
-        setIsSearch(false); // Set isSearch to false when filtering
-        setIsFilter(true); // Set isFilter to true when filtering
+        setIsSearch(false);
+        setIsFilter(true);
         setCurrentPage(page);
         const res = await getFilterBooksByPage(
           str,
           filterCategory === str ? page : 1
         );
         const lastElementIsNull = res[res.length - 1] === null;
-        // Update hasNext flag
         setHasNext(!lastElementIsNull);
-        // Remove the null element if present
         if (lastElementIsNull) {
           res.pop();
         }
@@ -141,22 +138,28 @@ export default function RabbiBooks() {
       console.error("Error fetching data:", error);
     }
   };
+
   const handleClickAddBook = () => {
     setOpen(true);
     setSelectedBook(newBook);
     setIsNewBook(true);
   };
 
+  const handleCloseAlert = () => {
+    setAlert({ open: false, severity: "", message: "" });
+  };
+  console.log("books",books)
+
   return (
     <>
-        <EditObjectAdmin
-          open={open}
-          onClose={setOpen}
-          objectType={"Book"}
-          objectData={selectedBook}
-          setObject={setSelectedBook}
-          isNewObject={isNewBook}
-        />
+      <EditObjectAdmin
+        open={open}
+        onClose={() => setOpen(false)}
+        objectType={"Book"}
+        objectData={selectedBook}
+        setObject={setSelectedBook}
+        isNewObject={isNewBook}
+      />
       <Box
         display={"flex"}
         flexDirection={"column"}
@@ -164,20 +167,20 @@ export default function RabbiBooks() {
         alignItems={"center"}
         gap={"10px"}
       >
-        {alert && (
-          <Box
-            position="fixed"
-            top={"15%"}
-            width="100%"
-            zIndex={1000}
-            display="flex"
-            justifyContent="center"
-            alignSelf={"center"}
-            padding={0}
+        <Snackbar
+          open={alert.open}
+          autoHideDuration={6000}
+          onClose={handleCloseAlert}
+        >
+          <Alert
+            variant="filled"
+            sx={{ width: "80%" }}
+            onClose={handleCloseAlert}
+            severity={alert.severity}
           >
-            {alert}
-          </Box>
-        )}
+            {alert.message}
+          </Alert>
+        </Snackbar>
         <Box
           display={"flex"}
           flexDirection={"row"}
@@ -237,17 +240,15 @@ export default function RabbiBooks() {
             })}
         </Grid>
         <Button
-          disabled={
-            isFilter || isSearch ? currentPage === 1 : FetchCurrentPage === 1
-          }
-          onClick={() => handlePrevPage()}
+          disabled={isFilter || isSearch ? currentPage === 1 : fetchCurrentPage === 1}
+          onClick={handlePrevPage}
         >
           הקודם
         </Button>
-        <Button disabled={!hasNext} onClick={() => handleNextPage()}>
+        <Button disabled={!hasNext} onClick={handleNextPage}>
           הבא
         </Button>
       </Box>
-    </> 
+    </>
   );
 }

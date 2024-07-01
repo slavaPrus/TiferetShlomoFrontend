@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getMarkById } from "../utils/MarkUtil";
 import { setMarks } from "../features/markSlice";
@@ -11,6 +11,8 @@ const PrivateArea = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.users.oneUser);
+  const adminMode = user?.userType === 2;
+  const [alert, setAlert] = useState(null); // State to manage alerts
 
   useEffect(() => {
     let userLocal = localStorage.getItem("user");
@@ -30,6 +32,7 @@ const PrivateArea = () => {
       dispatch(setMarks(res));
     } catch (error) {
       console.log(error);
+      setAlert("Error fetching marks");
     }
   };
 
@@ -70,11 +73,12 @@ const PrivateArea = () => {
           המבחנים שלך
         </Typography>
       </Box>
+
       <Box
         width={"80%"}
         sx={{
-          display:"flex",
-          flexDirection:"column",
+          display: "flex",
+          flexDirection: "column",
           border: "2px solid #e3e2e2",
           borderRadius: "35px 35px 0 0",
           p: "70px",
@@ -82,12 +86,32 @@ const PrivateArea = () => {
           rowGap: "50px",
         }}
       >
-        {marks && marks.length > 0 ? (
+        {adminMode ? (
+          <Typography
+            sx={{
+              display: "flex",
+              alignSelf: "center",
+              fontSize: "20px",
+              bgcolor: "yellow",
+            }}
+          >
+            מצב מנהל פעיל
+          </Typography>
+        ) : marks?.length > 0 ? (
           marks.map((mark, index) => (
             <OneTest key={index} mark={mark} /> // Ensure you return the component
           ))
         ) : (
-          <Typography sx={{display:"flex", alignSelf:"center",fontSize:"20px",bgcolor:"yellow"}} >לא נמצאו נתונים עבורך</Typography>
+          <Typography
+            sx={{
+              display: "flex",
+              alignSelf: "center",
+              fontSize: "20px",
+              bgcolor: "yellow",
+            }}
+          >
+            לא נמצאו נתונים עבורך
+          </Typography>
         )}
       </Box>
     </Box>
