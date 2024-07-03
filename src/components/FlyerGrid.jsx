@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React from "react"; 
 import { Box, Button, Card, Grid, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { deleteFlyer } from "../utils/FlyerUtil";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
+import DeleteIcon from "@mui/icons-material/Delete";
 import PdfView from "./PdfView";
 
 export const FlyerGrid = ({
@@ -91,13 +92,17 @@ export const FlyerGrid = ({
             onClick={(e) => {
               handleClick(e);
             }}
-          >לעיון</Button>
+            endIcon={<LibraryBooksIcon />}
+          >
+            לעיון
+          </Button>
           {oneUser && oneUser.userType === 2 && (
             <>
-              <Button onClick={handleDeleteFlyer}>מחיקה</Button>
-              <Button onClick={handleClickEditFlyer}>
+              <Button onClick={handleDeleteFlyer} endIcon={<DeleteIcon />}>
+                מחיקה
+              </Button>
+              <Button onClick={handleClickEditFlyer} endIcon={<ModeEditIcon />}>
                 עריכה
-                <ModeEditIcon />
               </Button>
             </>
           )}

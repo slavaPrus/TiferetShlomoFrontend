@@ -72,7 +72,7 @@ const updateFlyer = async (flyer) => {
 
 const deleteFlyer = async (id) => {
   try {
-    const response = await api.delete(`Flyer/DeleteFlyer?id=${id}`);
+    const response = await api.delete(`flyers/${id}`);
     return response.data;
   } catch (error) {
     console.error('Error in deleteFlyer:', error);

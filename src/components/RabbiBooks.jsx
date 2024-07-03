@@ -35,7 +35,6 @@ export default function RabbiBooks() {
     bookUrl: "",
     category: "",
     cost: 0,
-    pictureData: "",
     stock: 0,
   };
   const [newBook] = useState(emptyBook);

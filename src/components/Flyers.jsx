@@ -15,9 +15,8 @@ import {
 } from "../utils/FlyerUtil";
 
 const emptyFlyer = {
-  FlyerName: "",
-  FlyerUrl: "",
-  ParashatShavua: "",
+  flyerUrl: "",
+  parashatShavuaDescribe: "",
 };
 
 export default function Flyers() {
@@ -165,10 +164,10 @@ export default function Flyers() {
             width={"50%"}
             gap={"10px"}
           >
-            <FilterInput
+            {/* <FilterInput
               handleChange={handleFilterCategory}
               categories={categories}
-            />
+            /> */}
             <SearchInput handleChange={handleSearchFlyers} />
           </Box>
           <Typography variant="h4" color={"#0B1365"} fontWeight={"700"}>
