@@ -73,7 +73,7 @@ export const BookGrid = ({
           <Typography
             sx={{ textAlign: "center", fontWeight: "600", color: "#0B1365" }}
           >
-            {cost} ₪
+            ₪ {cost}
           </Typography>
         </Box>
 
