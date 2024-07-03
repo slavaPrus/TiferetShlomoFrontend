@@ -51,7 +51,8 @@ const getFlyerById = async (id) => {
 
 const addFlyer = async (flyer) => {
   try {
-    const response = await api.post('Flyer/InsertFlyer', flyer);
+    console.log("flyer",flyer)
+    const response = await api.post('flyers', flyer);
     return response.data;
   } catch (error) {
     console.error('Error in addFlyer:', error);
@@ -61,7 +62,7 @@ const addFlyer = async (flyer) => {
 
 const updateFlyer = async (flyer) => {
   try {
-    const response = await api.put('Flyer/UpdateFlyer', flyer);
+    const response = await api.put(`flyers/${flyer.flyerId}`, flyer);
     return response.data;
   } catch (error) {
     console.error('Error in updateFlyer:', error);

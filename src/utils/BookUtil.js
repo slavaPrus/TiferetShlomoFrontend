@@ -61,6 +61,8 @@ const addBook = async (book) => {
 
 const updateBook = async (book) => {
   try {
+    console.log("!BOOK",book);
+
     const response = await api.put(`books/${book.bookId}`, book);
     console.log("!",response);
     return response.data;

@@ -139,9 +139,10 @@ export default function Flyers() {
         onClose={setOpen}
         flyer={selectedFlyer}
         objectData={selectedFlyer}
+        objectType={"Flyer"}
         setObject={setSelectedFlyer}
         setFlyer={setSelectedFlyer}
-        isNewFlyer={isNewFlyer}
+        isNewObject={isNewFlyer}
       />
       <Box
         display="flex"

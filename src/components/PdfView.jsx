@@ -1,32 +1,48 @@
-import React from "react" ;
-import { useDownloadURL } from "react-firebase-hooks/storage";
-import 'firebase/compat/storage';
-import firebase from 'firebase/compat/app';
+import React, { useEffect, useState } from "react";
+import { Box, Typography } from "@mui/material";
 import { firebaseConfig } from "../firebaseConfig";
+import firebase from "firebase/compat/app";
+import "firebase/compat/storage";
 
-// Check if Firebase app is already initialized
 if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
+  firebase.initializeApp(firebaseConfig);
 }
 
-const PdfView = ({pdfUrl}) => {
-    const storage = firebase.storage();
-    const storageRef = storage.ref();
-    const pdfRef = storageRef.child(pdfUrl == null ? "" : pdfUrl);
-    const [url, loading, error] = useDownloadURL(pdfRef);
+const storageRef = firebase.storage().ref();
 
-    if(error){
-        return <span>ארעה שגיאה</span>;
-    }
+const PdfView = ({ pdfUrl }) => {
+  const [url, setUrl] = useState("");
+  console.log(url, "!!!!");
 
-    if(loading){
-        return <span>טוען...</span>;
-    }
-    return(<>
-            <a href={url} target="_blank" rel="noopener noreferrer">
-            {pdfUrl}
-          </a>
-    </>);
-}
+  useEffect(() => {
+    (async () => {
+      try {
+        const pdf = await storageRef.child(pdfUrl).getDownloadURL();
+        setUrl(pdf);
+      } catch (error) {
+        console.error("Error fetching PDF URL:", error);
+      }
+    })();
+  }, [pdfUrl]);
 
+  if (!url) {
+    return (
+      <Box sx={{ textAlign: "center" }}>
+        <Typography variant="body1">אירעה שגיאה בטעינת ה־PDF</Typography>
+      </Box>
+    );
+  }
+
+  return (
+    <>
+      {pdfUrl ? (
+        // <a href={pdfUrl} target="_blank" rel="noopener noreferrer" style={{ display: "block" }}>
+        <iframe src={url} height="100px" title="pdf" />
+      ) : (
+        // </a>
+        <p>Loading flyer...</p>
+      )}
+    </>
+  );
+};
 export default PdfView;

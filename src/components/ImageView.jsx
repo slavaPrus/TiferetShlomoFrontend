@@ -29,7 +29,7 @@ const ImageView = ({imageUrl, name, handleClick}) => {
       getImageUrl(imageUrl)
         .then((url) => setImage(url))
         .catch((error) => console.error(error));
-    }, []);
+    }, [imageUrl]);
 
     const getImageUrl = async (imagePath) => {
         const imageUrl = await storageRef.child(imagePath).getDownloadURL();

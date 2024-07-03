@@ -6,8 +6,10 @@ import BookAction from "./BookAction";
 
 export default function OneBook() {
   const location = useLocation();
-  const { state: book } = location || {};
-  
+  const book = location.state;
+
+  console.log("Received book:", book); // Debugging line
+
   // Ensure book object exists and has the expected properties
   if (!book ) {
     return <Typography>Invalid book data</Typography>;

@@ -21,7 +21,8 @@ export const BookGrid = ({
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate("/one-book", { state: { book } });
+    console.log("Navigating with book:", book); // Debugging line
+    navigate("/one-book", { state: book });
   };
 
   const handleClickEditBook = () => {
@@ -55,16 +56,7 @@ export const BookGrid = ({
           },
         }}
       >
-        {/* <img
-          onClick={handleClick}
-          src={ bamidbar}
-          alt={bookName}
-          style={{
-            height: "100%",
-            width: "100%",
-            objectFit: "cover",
-          }}
-        /> */}
+      
         <ImageView imageUrl={(bookUrl == null || bookUrl == "") ? "images/זאת אמונתי.JPG" : bookUrl} name={bookName} handleClick={handleClick}/>
         <Box
           sx={{

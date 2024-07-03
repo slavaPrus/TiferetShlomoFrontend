@@ -58,7 +58,7 @@ const EditObjectAdmin = (props) => {
     const value = event.target.value;
     const name = event.target.name;
 
-    if (name === "bookUrl" && event.target.files[0]) {
+    if (name.includes("Url") && event.target.files[0]) {
       setImage(event.target.files[0]);
       const imageUrl = await uploadImage(event.target.files[0]);
       setObject((prevObject) => ({
@@ -91,6 +91,7 @@ const EditObjectAdmin = (props) => {
   const handleAddObject = async () => {
     try {
       const res = await selectedUtil[`add${objectType}`](objectData);
+      console.log("res",res)
       setAlert({ open: true, severity: "success", message: "הוסף בהצלחה" });
       handleClose();
     } catch (error) {
@@ -100,34 +101,17 @@ const EditObjectAdmin = (props) => {
 
   const uploadImage = async (imageFile) => {
     const imageUrl = `images/${imageFile.name}`;
-    console.log("**********************File*************", imageFile);
-    console.log("***********************************", imageUrl);
     const imagesRef = storageRef.child(imageUrl);
 
     imagesRef.put(imageFile).then(() => {
         console.log('Image uploaded successfully');
-        // imagesRef.getDownloadURL().then((url) => {
-        //     image
-        // });
     });
-    // const storageRef = ref(storage, imageUrl);
-    // await uploadBytes(storageRef, imageFile);
-    // const imageUrl = await getDownloadURL(storageRef);
-    // await axios
-    //   .post("/api/save-image-url", { url: imageUrl })
-    //   .then((response) => {
-    //     console.log("Image URL saved successfully:", response);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error saving image URL:", error);
-    //   });
     return imageUrl;
   };
 
   const handleCloseAlert = () => {
     setAlert({ open: false, severity: "", message: "" });
   };
-
   return (
     <>
       <Dialog
