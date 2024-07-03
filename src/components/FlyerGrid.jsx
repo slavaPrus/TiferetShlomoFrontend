@@ -19,7 +19,8 @@ export const FlyerGrid = ({
   const navigate = useNavigate();
   console.log(flyer, "flyer");
 
-  const handleClick = () => {
+  const handleClick = (e) => {
+    e.stopPropagation();
     navigate("/one-flyer", { state: flyer });
   };
 
@@ -75,7 +76,6 @@ export const FlyerGrid = ({
             width: "100%",
             overflow: "hidden",
           }}
-          onClick={handleClick}
         >
           <PdfView pdfUrl={flyerUrl} />
         </div>
@@ -87,6 +87,11 @@ export const FlyerGrid = ({
             alignItems: "center",
           }}
         >
+          <Button
+            onClick={(e) => {
+              handleClick(e);
+            }}
+          >לעיון</Button>
           {oneUser && oneUser.userType === 2 && (
             <>
               <Button onClick={handleDeleteFlyer}>מחיקה</Button>
