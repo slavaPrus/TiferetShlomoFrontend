@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import FilterInput from "./FilterInput";
 import SearchInput from "./SearchInput";
 import { Link } from "react-router-dom";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Alert, Box, Button, Grid, Snackbar, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setFlyers } from "../features/flyerSlice";
 import FlyerGrid from "./FlyerGrid";
@@ -34,7 +34,7 @@ export default function Flyers() {
   const [isNewFlyer, setIsNewFlyer] = useState(false);
   const oneUser = useSelector((state) => state.users.oneUser);
   const flyers = useSelector((state) => state.flyer.Flyers);
-  const categories = ["בראשית", "שמות", "ויקרא", "במדבר", "דברים"];
+  const [alert, setAlert] = useState({ open: false, severity: "", message: "" });
 
   useEffect(() => {
     fetchData(fetchCurrentPage);
@@ -130,6 +130,9 @@ export default function Flyers() {
     setSelectedFlyer(newFlyer);
     setIsNewFlyer(true);
   };
+  const handleCloseAlert = () => {
+    setAlert({ open: false, severity: "", message: "" });
+  };
 
   return (
     <>
@@ -150,6 +153,20 @@ export default function Flyers() {
         alignItems="center"
         gap="10px"
       >
+         <Snackbar
+          open={alert.open}
+          autoHideDuration={6000}
+          onClose={handleCloseAlert}
+        >
+          <Alert
+            variant="filled"
+            sx={{ width: "80%" }}
+            onClose={handleCloseAlert}
+            severity={alert.severity}
+          >
+            {alert.message}
+          </Alert>
+        </Snackbar>
         <Box
           display="flex"
           flexDirection="row"
@@ -164,10 +181,6 @@ export default function Flyers() {
             width={"50%"}
             gap={"10px"}
           >
-            {/* <FilterInput
-              handleChange={handleFilterCategory}
-              categories={categories}
-            /> */}
             <SearchInput handleChange={handleSearchFlyers} />
           </Box>
           <Typography variant="h4" color={"#0B1365"} fontWeight={"700"}>
@@ -199,6 +212,7 @@ export default function Flyers() {
                 flyer={flyer}
                 key={index}
                 setOpen={setOpen}
+                setAlert={setAlert}
                 setSelectedFlyer={setSelectedFlyer}
                 setIsNewFlyer={setIsNewFlyer}
               />

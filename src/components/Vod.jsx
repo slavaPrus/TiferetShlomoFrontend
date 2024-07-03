@@ -170,13 +170,6 @@ export default function RabbiLessons() {
             isNewObject={isNewLesson}
           />
       }
-      {/* <EditLessonAdmin
-          open={open}
-          onClose={setOpen}
-          Lesson={selectedLesson}
-          setLesson={setSelectedLesson}
-          isNewLesson={isNewLesson}
-        /> */}
       <Box
         display={"flex"}
         flexDirection={"column"}

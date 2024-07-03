@@ -12,6 +12,7 @@ export const FlyerGrid = ({
   flyer,
   index,
   setOpen,
+  setAlert,
   setSelectedFlyer,
   setIsNewFlyer,
 }) => {
@@ -28,10 +29,10 @@ export const FlyerGrid = ({
   const handleDeleteFlyer = async () => {
     try {
       await deleteFlyer(flyer.flyerId).then((res) => {
-        alert("המחיקה בוצעה בהצלחה");
+        setAlert({ open: true, severity: "success", message: "המחיקה בוצעה בהצלחה" });
       });
     } catch (error) {
-      alert(error);
+      setAlert({ open: true, severity: "error", message: "ארעה שגיאה במחיקה" });
     }
   };
 

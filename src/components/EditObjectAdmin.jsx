@@ -13,12 +13,8 @@ import * as BookUtil from "../utils/BookUtil";
 import * as FlyerUtil from "../utils/FlyerUtil";
 import * as LessonUtil from "../utils/LessonUtil";
 import { firebaseConfig } from "../firebaseConfig";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import axios from "axios";
 import firebase from "firebase/compat/app";
 import "firebase/compat/storage";
-
-import { useUploadFile } from "react-firebase-hooks/storage";
 
 // Check if Firebase app is already initialized
 if (!firebase.apps.length) {
@@ -33,6 +29,7 @@ const EditObjectAdmin = (props) => {
     severity: "",
     message: "",
   });
+  const [errors, setErrors] = useState({});
   const [image, setImage] = useState(null);
 
   const utilMap = {
@@ -46,12 +43,25 @@ const EditObjectAdmin = (props) => {
   const storage = firebase.storage();
   const storageRef = storage.ref();
 
+  const requiredFields = ["bookName", "bookUrl", "cost","stock","flyerUrl","parashatShavuaDescribe","lessonName","lessonUrl"];
+
   useEffect(() => {
     console.log(objectData);
   }, [objectData]);
 
   const handleClose = () => {
     onClose(false);
+  };
+
+  const validate = () => {
+    let tempErrors = {};
+    requiredFields.forEach((field) => {
+      if (!objectData[field]) {
+        tempErrors[field] = "שדה זה הוא חובה";
+      }
+    });
+    setErrors(tempErrors);
+    return Object.keys(tempErrors).length === 0;
   };
 
   const handleObjectChange = async (event) => {
@@ -75,32 +85,47 @@ const EditObjectAdmin = (props) => {
         ...prevObject,
         [name]: value,
       }));
+      // עדכון שגיאות ולידציה
+      if (errors[name]) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: "",
+        }));
+      }
     }
   };
 
   const handleUpdateObject = async () => {
-    try {
-      const res = await selectedUtil[`update${objectType}`](objectData);
-      console.log(res);
-      setAlert({
-        open: true,
-        severity: "success",
-        message: "העדכון בוצע בהצלחה",
-      });
-      handleClose();
-    } catch (error) {
-      setAlert({ open: true, severity: "error", message: error.message });
+    if (validate()) {
+      try {
+        const res = await selectedUtil[`update${objectType}`](objectData);
+        console.log(res);
+        setAlert({
+          open: true,
+          severity: "success",
+          message: "העדכון בוצע בהצלחה",
+        });
+        handleClose();
+      } catch (error) {
+        setAlert({ open: true, severity: "error", message: error.message });
+      }
+    } else {
+      setAlert({ open: true, severity: "error", message: "ישנם שגיאות בוולידציה" });
     }
   };
 
   const handleAddObject = async () => {
-    try {
-      const res = await selectedUtil[`add${objectType}`](objectData);
-      console.log("res", res);
-      setAlert({ open: true, severity: "success", message: "הוסף בהצלחה" });
-      handleClose();
-    } catch (error) {
-      setAlert({ open: true, severity: "error", message: "ארעה שגיאה בהוספה" });
+    if (validate()) {
+      try {
+        const res = await selectedUtil[`add${objectType}`](objectData);
+        console.log("res", res);
+        setAlert({ open: true, severity: "success", message: "הוסף בהצלחה" });
+        handleClose();
+      } catch (error) {
+        setAlert({ open: true, severity: "error", message: "ארעה שגיאה בהוספה" });
+      }
+    } else {
+      setAlert({ open: true, severity: "error", message: "ישנם שגיאות בוולידציה" });
     }
   };
 
@@ -113,6 +138,7 @@ const EditObjectAdmin = (props) => {
     });
     return imageUrl;
   };
+
   const uploadPdf = async (pdfFile) => {
     const pdfUrl = `flyers/${pdfFile.name}`;
     const pdfRef = storageRef.child(pdfUrl);
@@ -125,6 +151,7 @@ const EditObjectAdmin = (props) => {
   const handleCloseAlert = () => {
     setAlert({ open: false, severity: "", message: "" });
   };
+
   return (
     <>
       <Dialog
@@ -154,10 +181,10 @@ const EditObjectAdmin = (props) => {
                   fullWidth
                   margin="normal"
                   name={objectField}
-                  value={
-                    objectField.includes("Url") ? "" : objectData[objectField]
-                  }
+                  value={objectField.includes("Url") ? "" : objectData[objectField]}
                   onChange={(event) => handleObjectChange(event)}
+                  error={!!errors[objectField]}
+                  helperText={errors[objectField]}
                 />
               </Grid>
             ))}
