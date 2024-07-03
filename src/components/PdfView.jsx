@@ -36,10 +36,8 @@ const PdfView = ({ pdfUrl }) => {
   return (
     <>
       {pdfUrl ? (
-        // <a href={pdfUrl} target="_blank" rel="noopener noreferrer" style={{ display: "block" }}>
-        <iframe src={url} height="100px" title="pdf" />
+        <iframe src={url} height="100%" width="100%" title="pdf" />
       ) : (
-        // </a>
         <p>Loading flyer...</p>
       )}
     </>

@@ -15,8 +15,8 @@ import * as LessonUtil from "../utils/LessonUtil";
 import { firebaseConfig } from "../firebaseConfig";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import axios from "axios";
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/storage';
+import firebase from "firebase/compat/app";
+import "firebase/compat/storage";
 
 import { useUploadFile } from "react-firebase-hooks/storage";
 
@@ -45,7 +45,7 @@ const EditObjectAdmin = (props) => {
 
   const storage = firebase.storage();
   const storageRef = storage.ref();
-  
+
   useEffect(() => {
     console.log(objectData);
   }, [objectData]);
@@ -60,10 +60,15 @@ const EditObjectAdmin = (props) => {
 
     if (name.includes("Url") && event.target.files[0]) {
       setImage(event.target.files[0]);
-      const imageUrl = await uploadImage(event.target.files[0]);
+      let url;
+
+      name === "flyerUrl"
+        ? (url = await uploadPdf(event.target.files[0]))
+        : (url = await uploadImage(event.target.files[0]));
+
       setObject((prevObject) => ({
         ...prevObject,
-        [name]: imageUrl,
+        [name]: url,
       }));
     } else {
       setObject((prevObject) => ({
@@ -91,7 +96,7 @@ const EditObjectAdmin = (props) => {
   const handleAddObject = async () => {
     try {
       const res = await selectedUtil[`add${objectType}`](objectData);
-      console.log("res",res)
+      console.log("res", res);
       setAlert({ open: true, severity: "success", message: "הוסף בהצלחה" });
       handleClose();
     } catch (error) {
@@ -104,9 +109,17 @@ const EditObjectAdmin = (props) => {
     const imagesRef = storageRef.child(imageUrl);
 
     imagesRef.put(imageFile).then(() => {
-        console.log('Image uploaded successfully');
+      console.log("Image uploaded successfully");
     });
     return imageUrl;
+  };
+  const uploadPdf = async (pdfFile) => {
+    const pdfUrl = `flyers/${pdfFile.name}`;
+    const pdfRef = storageRef.child(pdfUrl);
+    pdfRef.put(pdfFile).then(() => {
+      console.log("pdf uploaded successfully");
+    });
+    return pdfUrl;
   };
 
   const handleCloseAlert = () => {
@@ -118,8 +131,7 @@ const EditObjectAdmin = (props) => {
         onClose={handleClose}
         open={open}
         PaperProps={{
-          sx: { padding: "30px"
-          },
+          sx: { padding: "30px" },
         }}
       >
         <DialogTitle display={"flex"} justifyContent={"center"}>
@@ -189,4 +201,3 @@ const EditObjectAdmin = (props) => {
 };
 
 export default EditObjectAdmin;
-

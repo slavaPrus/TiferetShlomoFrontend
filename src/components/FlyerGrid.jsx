@@ -15,25 +15,12 @@ export const FlyerGrid = ({
   setIsNewFlyer,
 }) => {
   const oneUser = useSelector((state) => state.users.oneUser);
-  const { flyerName, flyerUrl } = flyer;
+  const { parashatShavuaDescribe, flyerUrl } = flyer;
   const navigate = useNavigate();
-  const [pdfUrl, setPdfUrl] = useState("");
-
-  // useEffect(() => {
-  //   const storage = getStorage();
-  //   const storageRef = ref(storage, flyerUrl); // יצירת הפניה לקובץ ה-PDF באמצעות child
-
-  //   getDownloadURL(storageRef)
-  //     .then((downloadUrl) => {
-  //       setPdfUrl(downloadUrl);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching PDF URL:", error);
-  //     });
-  // }, [flyerUrl]);
+  console.log(flyer, "flyer");
 
   const handleClick = () => {
-    navigate("/one-flyer", { state: flyer  });
+    navigate("/one-flyer", { state: flyer });
   };
 
   const handleDeleteFlyer = async () => {
@@ -77,15 +64,21 @@ export const FlyerGrid = ({
           },
         }}
       >
-        {/* <iframe */}
-          {/* style={{
+        <Typography
+          sx={{ textAlign: "center", fontWeight: "600", color: "#0B1365" }}
+        >
+          {parashatShavuaDescribe}
+        </Typography>
+        <div
+          style={{
             height: "100%",
             width: "100%",
             overflow: "hidden",
-          }} */}
-        {/* > */}
+          }}
+          onClick={handleClick}
+        >
           <PdfView pdfUrl={flyerUrl} />
-        {/* </iframe> */}
+        </div>
         <Box
           sx={{
             display: "flex",
@@ -94,12 +87,9 @@ export const FlyerGrid = ({
             alignItems: "center",
           }}
         >
-          <Typography sx={{ textAlign: "center" }}>{flyerName}</Typography>
           {oneUser && oneUser.userType === 2 && (
             <>
-              <Button onClick={handleDeleteFlyer}>
-                מחיקה
-              </Button>
+              <Button onClick={handleDeleteFlyer}>מחיקה</Button>
               <Button onClick={handleClickEditFlyer}>
                 עריכה
                 <ModeEditIcon />
