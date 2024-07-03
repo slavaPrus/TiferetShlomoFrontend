@@ -39,22 +39,26 @@ export default function BookAction({ book, setAlert }) {
           }}
         >
           <IconButton
-            onClick={() =>
+            onClick={() => {
               handleDecreaseQuantity(
                 book,
                 quantity,
                 setAlert,
                 cartItems,
                 setCartItems
-              )
-            }
+              );
+              setQuantity(quantity - 1);
+            }}
             disabled={quantity < 1}
           >
             <RemoveIcon />
           </IconButton>
           <Typography sx={{ mx: 2 }}>{quantity}</Typography>
           <IconButton
-            onClick={() => handleAddCart(book, setAlert, cartItems, setCartItems)}
+            onClick={() => {
+              handleAddCart(book, setAlert, cartItems, setCartItems);
+              setQuantity(quantity + 1);
+            }}
             disabled={quantity >= book.stock}
           >
             <AddIcon />
